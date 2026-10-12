@@ -1,39 +1,35 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { EventPage } from '@/features/events/EventPage';
-import { EventSearchPage } from '@/features/events/EventSearchPage';
 import { HomePage } from '@/features/home/HomePage';
-import { TrueSkillPage } from '@/features/leaderboards/TrueSkillPage';
-import { WorldSkillsPage } from '@/features/leaderboards/WorldSkillsPage';
-import { MatchPage } from '@/features/matches/MatchPage';
-import { ManualPage } from '@/features/manual/ManualPage';
-import { MorePage } from '@/features/more/MorePage';
-import { NotesPage } from '@/features/notes/NotesPage';
-import { ScoringPage } from '@/features/scoring/ScoringPage';
-import { SettingsPage } from '@/features/settings/SettingsPage';
-import { TeamPage } from '@/features/teams/TeamPage';
-import { TeamSearchPage } from '@/features/teams/TeamSearchPage';
-import { TimerPage } from '@/features/timer/TimerPage';
 import { Layout } from './Layout';
 import { NotFoundPage } from './NotFoundPage';
+import { RouteError } from './RouteError';
 
+/**
+ * Routes. Everything except Home is code-split; the service worker precaches every chunk,
+ * so lazy routes still open offline.
+ */
 export const router = createBrowserRouter([
   {
     element: <Layout />,
+    errorElement: <RouteError />,
     children: [
       { path: '/', element: <HomePage /> },
-      { path: '/teams', element: <TeamSearchPage /> },
-      { path: '/teams/:number', element: <TeamPage /> },
-      { path: '/events', element: <EventSearchPage /> },
-      { path: '/events/:eventId', element: <EventPage /> },
-      { path: '/events/:eventId/divisions/:divisionId/matches/:matchId', element: <MatchPage /> },
-      { path: '/leaderboards/skills', element: <WorldSkillsPage /> },
-      { path: '/leaderboards/trueskill', element: <TrueSkillPage /> },
-      { path: '/notes', element: <NotesPage /> },
-      { path: '/scoring', element: <ScoringPage /> },
-      { path: '/timer', element: <TimerPage /> },
-      { path: '/manual', element: <ManualPage /> },
-      { path: '/more', element: <MorePage /> },
-      { path: '/settings', element: <SettingsPage /> },
+      { path: '/teams', lazy: () => import('@/features/teams/TeamSearchPage').then((m) => ({ Component: m.TeamSearchPage })) },
+      { path: '/teams/:number', lazy: () => import('@/features/teams/TeamPage').then((m) => ({ Component: m.TeamPage })) },
+      { path: '/events', lazy: () => import('@/features/events/EventSearchPage').then((m) => ({ Component: m.EventSearchPage })) },
+      { path: '/events/:eventId', lazy: () => import('@/features/events/EventPage').then((m) => ({ Component: m.EventPage })) },
+      {
+        path: '/events/:eventId/divisions/:divisionId/matches/:matchId',
+        lazy: () => import('@/features/matches/MatchPage').then((m) => ({ Component: m.MatchPage })),
+      },
+      { path: '/leaderboards/skills', lazy: () => import('@/features/leaderboards/WorldSkillsPage').then((m) => ({ Component: m.WorldSkillsPage })) },
+      { path: '/leaderboards/trueskill', lazy: () => import('@/features/leaderboards/TrueSkillPage').then((m) => ({ Component: m.TrueSkillPage })) },
+      { path: '/notes', lazy: () => import('@/features/notes/NotesPage').then((m) => ({ Component: m.NotesPage })) },
+      { path: '/scoring', lazy: () => import('@/features/scoring/ScoringPage').then((m) => ({ Component: m.ScoringPage })) },
+      { path: '/timer', lazy: () => import('@/features/timer/TimerPage').then((m) => ({ Component: m.TimerPage })) },
+      { path: '/manual', lazy: () => import('@/features/manual/ManualPage').then((m) => ({ Component: m.ManualPage })) },
+      { path: '/more', lazy: () => import('@/features/more/MorePage').then((m) => ({ Component: m.MorePage })) },
+      { path: '/settings', lazy: () => import('@/features/settings/SettingsPage').then((m) => ({ Component: m.SettingsPage })) },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

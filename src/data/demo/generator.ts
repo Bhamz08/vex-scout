@@ -285,7 +285,7 @@ function makeTeams(rng: Rng): { teams: Team[]; strength: Map<number, HiddenStren
       number,
       name: names[i] ?? `Team ${i}`,
       robotName: rng.chance(0.5) ? rng.pick(['Atlas', 'Bolt', 'Comet', 'Dynamo', 'Echo', 'Fang', 'Gizmo', 'Halo']) : undefined,
-      organization: rng.pick(ORGANIZATIONS),
+      organization: rng.pick(ORGANIZATIONS.filter((o) => o.includes('Middle') === (grade === 'Middle School'))),
       location: { city: place.city, region: place.region, country: place.country },
       grade,
       program: 'V5RC',

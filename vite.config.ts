@@ -16,6 +16,7 @@ export default defineConfig({
       registerType: 'prompt',
       includeAssets: ['favicon.svg', 'offline.html', 'icons/apple-touch-icon.png'],
       manifest: {
+        id: '/',
         name: 'VEX Scout',
         short_name: 'VEX Scout',
         description: 'Offline-first scouting, stats and tools for VEX V5RC and VEX U.',
@@ -23,6 +24,7 @@ export default defineConfig({
         background_color: '#0b1020',
         display: 'standalone',
         orientation: 'portrait',
+        categories: ['sports', 'utilities', 'education'],
         start_url: '/',
         scope: '/',
         icons: [
@@ -52,6 +54,17 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        // Long-lived vendor chunks: app updates don't invalidate the cached libraries.
+        manualChunks: {
+          react: ['react', 'react-dom', 'react-router-dom'],
+          data: ['@tanstack/react-query', 'dexie', 'dexie-react-hooks', 'zod', 'zustand'],
+        },
+      },
+    },
+  },
   test: {
     environment: 'node',
     include: ['src/**/*.test.ts', 'api/**/*.test.ts'],
