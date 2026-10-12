@@ -43,6 +43,13 @@ export function formatPercent(p: number): string {
   return `${Math.round(p * 100)}%`;
 }
 
+/** Like formatPercent, but never claims certainty: shows "<1%" / ">99%" at the extremes. */
+export function formatProbability(p: number): string {
+  if (p < 0.01) return '<1%';
+  if (p > 0.99) return '>99%';
+  return formatPercent(p);
+}
+
 export function placeLine(loc: { city: string; region: string; country: string }): string {
   return [loc.city, loc.region, loc.country].filter((s, i, arr) => s && arr.indexOf(s) === i).join(', ');
 }

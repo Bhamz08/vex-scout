@@ -245,7 +245,7 @@ function MatchesByEvent({ team, matches, events }: { team: Team; matches: Match[
             <ul className="space-y-2">
               {list.map((m) => (
                 <li key={m.id}>
-                  <MatchRow match={m} highlightTeamId={team.id} href={`/events/${m.eventId}/matches/${m.id}`} />
+                  <MatchRow match={m} highlightTeamId={team.id} href={`/events/${m.eventId}/divisions/${m.divisionId}/matches/${m.id}`} />
                 </li>
               ))}
             </ul>

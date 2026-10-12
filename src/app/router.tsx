@@ -2,6 +2,9 @@ import { createBrowserRouter } from 'react-router-dom';
 import { EventPage } from '@/features/events/EventPage';
 import { EventSearchPage } from '@/features/events/EventSearchPage';
 import { HomePage } from '@/features/home/HomePage';
+import { TrueSkillPage } from '@/features/leaderboards/TrueSkillPage';
+import { WorldSkillsPage } from '@/features/leaderboards/WorldSkillsPage';
+import { MatchPage } from '@/features/matches/MatchPage';
 import { MorePage } from '@/features/more/MorePage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
 import { TeamPage } from '@/features/teams/TeamPage';
@@ -18,6 +21,9 @@ export const router = createBrowserRouter([
       { path: '/teams/:number', element: <TeamPage /> },
       { path: '/events', element: <EventSearchPage /> },
       { path: '/events/:eventId', element: <EventPage /> },
+      { path: '/events/:eventId/divisions/:divisionId/matches/:matchId', element: <MatchPage /> },
+      { path: '/leaderboards/skills', element: <WorldSkillsPage /> },
+      { path: '/leaderboards/trueskill', element: <TrueSkillPage /> },
       { path: '/more', element: <MorePage /> },
       { path: '/settings', element: <SettingsPage /> },
       { path: '*', element: <NotFoundPage /> },

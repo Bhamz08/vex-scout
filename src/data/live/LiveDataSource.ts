@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { DataSource } from '../DataSource';
-import type { EventFilter, Grade, ProgramCode, SkillsEntry } from '../types';
+import { db } from '../db';
+import type { EventFilter, Grade, Match, ProgramCode, SkillsEntry, VexEvent } from '../types';
 import { ApiError, getAll, getOne } from './client';
 import { endpoints, WORLD_SKILLS_PROXY } from './endpoints';
 import { toAward, toEvent, toMatch, toRanking, toSeason, toSkills, toTeam, toWorldSkills } from './mappers';
@@ -88,6 +89,24 @@ export class LiveDataSource implements DataSource {
 
   async getEventAwards(eventId: number) {
     return (await getAll(AwardSchema, endpoints.eventAwards(eventId))).map(toAward);
+  }
+
+  /** Every match list cached on this device (division and team match lists), de-duplicated, for one season. */
+  async getRatingMatches(seasonId: number) {
+    const rows = await db.cache.toArray();
+    const seasonEvents = new Set<number>();
+    for (const r of rows) {
+      const key = JSON.parse(r.key) as unknown[];
+      const event = r.data as VexEvent | null;
+      if (key[0] === 'event' && event?.seasonId === seasonId) seasonEvents.add(event.id);
+    }
+    const matches = new Map<number, Match>();
+    for (const r of rows) {
+      const key = JSON.parse(r.key) as unknown[];
+      if (key[0] !== 'matches' && key[0] !== 'teamMatches') continue;
+      for (const m of r.data as Match[]) if (seasonEvents.has(m.eventId)) matches.set(m.id, m);
+    }
+    return [...matches.values()];
   }
 
   async getWorldSkills(seasonId: number, grade: Grade) {

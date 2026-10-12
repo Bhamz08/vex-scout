@@ -62,7 +62,7 @@ function MatchList({ event, matches, show, team, renderExtra }: { event: VexEven
           <ul className="space-y-2">
             {list.map((m) => (
               <li key={m.id}>
-                <MatchRow match={m} highlightTeamId={highlight} href={`/events/${event.id}/matches/${m.id}`} extra={renderExtra?.(m)} />
+                <MatchRow match={m} highlightTeamId={highlight} href={`/events/${event.id}/divisions/${m.divisionId}/matches/${m.id}`} extra={renderExtra?.(m)} />
               </li>
             ))}
           </ul>

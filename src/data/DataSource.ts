@@ -42,6 +42,12 @@ export interface DataSource {
   getEventAwards(eventId: number): Promise<Award[]>;
 
   getWorldSkills(seasonId: number, grade: Grade): Promise<WorldSkillsEntry[]>;
+
+  /**
+   * Matches to compute season-wide ratings (TrueSkill) from. There is no API endpoint for "every match
+   * in a season", so the live source returns the matches cached on this device; the demo returns all.
+   */
+  getRatingMatches(seasonId: number): Promise<Match[]>;
 }
 
 /** Program mode → API program + grade filter. */

@@ -7,21 +7,29 @@ import { Tabs } from '@/components/ui/Tabs';
 import { useEvent } from '@/data/queries';
 import type { Division, VexEvent } from '@/data/types';
 import { FavoriteButton } from '@/features/favorites/FavoriteButton';
-import { formatDateRange, placeLine } from '@/lib/format';
+import { ExcellencePanel } from '@/features/excellence/ExcellencePanel';
+import { PredictionsPanel } from '@/features/stats/PredictionsPanel';
+import { StatsPanel } from '@/features/stats/StatsPanel';
+import { useDivisionModel } from '@/features/stats/useDivisionModel';
+import { WinProbability } from '@/features/stats/WinProbability';
+import { formatDateRange, formatNumber, placeLine } from '@/lib/format';
 import { AwardsPanel } from './panels/AwardsPanel';
 import { MatchesPanel } from './panels/MatchesPanel';
 import { RankingsPanel } from './panels/RankingsPanel';
 import { SkillsPanel } from './panels/SkillsPanel';
 import { TeamsPanel } from './panels/TeamsPanel';
 
-type TabId = 'matches' | 'rankings' | 'teams' | 'skills' | 'awards';
+type TabId = 'matches' | 'rankings' | 'stats' | 'predictions' | 'teams' | 'skills' | 'awards' | 'excellence';
 
 const TABS: { id: TabId; label: string }[] = [
   { id: 'matches', label: 'Matches' },
   { id: 'rankings', label: 'Rankings' },
+  { id: 'stats', label: 'Stats' },
+  { id: 'predictions', label: 'Predictions' },
   { id: 'teams', label: 'Teams' },
   { id: 'skills', label: 'Skills' },
   { id: 'awards', label: 'Awards' },
+  { id: 'excellence', label: 'Excellence' },
 ];
 
 export function EventPage() {
@@ -32,6 +40,45 @@ export function EventPage() {
       {(event) => (event ? <EventDetail event={event} /> : <EmptyState title="Event not found" />)}
     </QueryView>
   );
+}
+
+const DIVISION_TABS: TabId[] = ['matches', 'rankings', 'stats', 'predictions', 'excellence'];
+
+/** Division-scoped sections. Matches and rankings are decorated with computed stats from the same model. */
+function DivisionTab({ tab, event, division }: { tab: TabId; event: VexEvent; division: Division }) {
+  const { model } = useDivisionModel(event, division);
+  switch (tab) {
+    case 'matches':
+      return (
+        <MatchesPanel
+          event={event}
+          division={division}
+          renderExtra={(m) => (model && !m.scored ? <WinProbability compact red={model.predict(m).redWinProbability} /> : null)}
+        />
+      );
+    case 'rankings':
+      return (
+        <RankingsPanel
+          event={event}
+          division={division}
+          extras={{
+            headers: ['OPR', 'DPR', 'CCWM'],
+            cells: (r) => {
+              const s = model?.stats.get(r.team.id);
+              return s ? [formatNumber(s.opr), formatNumber(s.dpr), formatNumber(s.ccwm)] : ['–', '–', '–'];
+            },
+          }}
+        />
+      );
+    case 'stats':
+      return <StatsPanel event={event} division={division} />;
+    case 'predictions':
+      return <PredictionsPanel event={event} division={division} />;
+    case 'excellence':
+      return <ExcellencePanel event={event} division={division} />;
+    default:
+      return null;
+  }
 }
 
 function EventDetail({ event }: { event: VexEvent }) {
@@ -81,9 +128,8 @@ function EventDetail({ event }: { event: VexEvent }) {
       <Tabs<TabId> label="Event sections" value={tab} onChange={(id) => update('tab', id)} items={TABS} />
 
       <div className="mt-4" role="tabpanel">
-        {!division && (tab === 'matches' || tab === 'rankings') && <EmptyState title="This event has no divisions yet" />}
-        {division && tab === 'matches' && <MatchesPanel event={event} division={division} />}
-        {division && tab === 'rankings' && <RankingsPanel event={event} division={division} />}
+        {!division && DIVISION_TABS.includes(tab) && <EmptyState title="This event has no divisions yet" />}
+        {division && DIVISION_TABS.includes(tab) && <DivisionTab tab={tab} event={event} division={division} />}
         {tab === 'teams' && <TeamsPanel event={event} />}
         {tab === 'skills' && <SkillsPanel event={event} />}
         {tab === 'awards' && <AwardsPanel event={event} />}

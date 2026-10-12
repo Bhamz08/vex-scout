@@ -105,6 +105,11 @@ export class DemoDataSource implements DataSource {
     return this.w.awards.filter((a) => a.eventId === eventId);
   }
 
+  async getRatingMatches(seasonId: number) {
+    const events = this.eventsInSeason(seasonId);
+    return this.w.matches.filter((m) => events.has(m.eventId));
+  }
+
   async getWorldSkills(seasonId: number, grade: Grade) {
     return (this.w.worldSkills.get(seasonId) ?? [])
       .filter((e) => e.grade === grade)
