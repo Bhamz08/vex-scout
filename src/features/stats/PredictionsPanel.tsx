@@ -30,6 +30,9 @@ export function PredictionsPanel({ event, division }: { event: VexEvent; divisio
   const rows = useMemo<Row[]>(() => (model ? sortMatches(model.matches).map((m) => ({ match: m, prediction: model.predict(m) })) : []), [model]);
   const decided = rows.map(pickedCorrectly).filter((x): x is boolean => x !== null);
   const correct = decided.filter(Boolean).length;
+  const unplayed = rows.filter((r) => !r.match.scored);
+  // After the event ends, unscored matches are leftovers (unneeded best-of-3 games), not upcoming ones.
+  const eventOver = Date.parse(event.end) < Date.now();
 
   if (query.isError) return <ErrorState error={query.error} onRetry={() => void query.refetch()} />;
   if (!model) return <Loading />;
@@ -56,7 +59,13 @@ export function PredictionsPanel({ event, division }: { event: VexEvent; divisio
           )}
         </p>
       </Card>
-      <PredictionList title="Upcoming" rows={rows.filter((r) => !r.match.scored)} event={event} division={division} />
+      {eventOver && unplayed.length > 0 ? (
+        <p className="text-sm text-muted">
+          {unplayed.length} scheduled match{unplayed.length === 1 ? ' was' : 'es were'} never played (e.g. deciding games of a series that ended early).
+        </p>
+      ) : (
+        <PredictionList title="Upcoming" rows={unplayed} event={event} division={division} />
+      )}
       <PredictionList title="Played" rows={rows.filter((r) => r.match.scored)} event={event} division={division} />
     </div>
   );

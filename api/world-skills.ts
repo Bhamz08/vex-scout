@@ -3,11 +3,11 @@ import { TtlCache } from './_lib/proxy';
 /**
  * GET /api/world-skills?season=<id>&grade=<High School|Middle School|College>
  *
- * ⚠ ASSUMED SOURCE: the World Skills standings are not part of the documented v2 API. This forwards to the
- * public standings JSON feed used by the RobotEvents website (no key needed, but no CORS headers either).
+ * The World Skills standings are not part of the documented v2 API. This forwards to the public JSON feed behind
+ * the events.vex.com standings page (checked working 2026-10-12; no key needed, but it is undocumented and may change).
  * Override the URL template with VEX_WORLD_SKILLS_URL ({season} and {grade} are substituted).
  */
-const DEFAULT_TEMPLATE = 'https://www.robotevents.com/api/seasons/{season}/skills?post_season=0&grade_level={grade}';
+const DEFAULT_TEMPLATE = 'https://events.vex.com/api/seasons/{season}/skills?post_season=0&grade_level={grade}';
 const cache = new TtlCache(20);
 const TTL_MS = 10 * 60_000;
 

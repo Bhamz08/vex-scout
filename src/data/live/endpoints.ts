@@ -10,7 +10,8 @@
  * ⚠ NOT IN THE SPEC (still assumptions):
  *   - program ids: resolved at runtime from GET /programs by abbreviation; FALLBACK_PROGRAM_IDS is only used
  *     if that call fails
- *   - World Skills standings: the API has no endpoint for them, see api/world-skills.ts
+ *   - World Skills standings: the API has no endpoint for them; api/world-skills.ts uses the undocumented
+ *     public feed behind the events.vex.com standings page
  *   - rate limits and CORS are not documented; the proxy passes 429s through and the browser never calls
  *     the API directly, so CORS does not matter
  */

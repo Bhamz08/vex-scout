@@ -71,7 +71,7 @@ Copy `.env.example` to `.env` for local use. On Vercel, set them in **Project â†
 |---|---|---|---|
 | `VEX_API_KEY` | server (Vercel function) | for live data | VEX Events API token. Never prefix with `VITE_`. |
 | `VEX_API_BASE` | server | no | Defaults to `https://events.vex.com/api/v2` |
-| `VEX_WORLD_SKILLS_URL` | server | no | URL template for World Skills standings (`{season}`, `{grade}`), see below |
+| `VEX_WORLD_SKILLS_URL` | server | no | Override the World Skills feed URL template (`{season}`, `{grade}`) |
 | `VITE_LIVE_API` | client (build time) | no | Set to `true` once the proxy has a key; enables "Live" in Settings |
 
 ## Deploying (Vercel)
@@ -81,7 +81,7 @@ Copy `.env.example` to `.env` for local use. On Vercel, set them in **Project â†
 3. Deploy. Static files are served from `dist/`, `api/vex/[...path].ts` and `api/world-skills.ts` become serverless functions, and all other paths rewrite to the SPA.
 4. Open the site on your phone and use **Add to Home Screen** / **Install app**.
 
-To run the functions locally, use `npx vercel dev` instead of `npm run dev`.
+Locally, `npm run dev` also serves `/api/*`: a dev-only Vite plugin (`scripts/devApiPlugin.ts`) runs the same function files and reads `VEX_API_KEY` from `.env` on the server side. So with a `.env` in place, `npm run dev` gives you live data. `npx vercel dev` works too.
 
 ## Architecture
 
@@ -121,7 +121,7 @@ src/
 ## API contract status
 
 `src/data/live/endpoints.ts` and `schemas.ts` were checked against the official OpenAPI spec (**Public VEX Events API, v1.0.21**): the base URL, Bearer auth, pagination (`page`/`per_page`, maximum 250), every path and parameter, and the round codes. Program ids are looked up from `GET /programs`. Not covered by the spec:
-- **World Skills standings** have no API endpoint. `api/world-skills.ts` proxies the public standings feed (the URL is configurable and marked ASSUMED).
+- **World Skills standings** have no API endpoint. `api/world-skills.ts` proxies the undocumented public feed behind the events.vex.com standings page (`/api/seasons/{id}/skills`). It was checked working on 2026-10-12, and the URL is configurable in case it changes.
 - **Rate limits** aren't documented. The proxy caches for 60 s and passes `429` responses through.
 - **CORS** doesn't matter because the browser only ever talks to our own origin.
 
