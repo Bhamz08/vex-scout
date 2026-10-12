@@ -7,7 +7,9 @@ export type ProgramCode = 'V5RC' | 'VURC';
 export type Grade = 'Middle School' | 'High School' | 'College';
 export type AllianceColor = 'red' | 'blue';
 export type MatchRound = 'practice' | 'qualification' | 'r16' | 'quarterfinal' | 'semifinal' | 'final' | 'other';
-export type EventLevel = 'World' | 'National' | 'Signature' | 'State' | 'Regional' | 'Other';
+/** Values of the API's EventLevel enum (swagger v1.0.21). */
+export const EVENT_LEVELS = ['World', 'National', 'Regional', 'State', 'Signature', 'Spotlight', 'USO', 'Other'] as const;
+export type EventLevel = (typeof EVENT_LEVELS)[number];
 
 export interface Location {
   venue?: string;

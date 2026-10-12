@@ -6,12 +6,10 @@ import { Badge } from '@/components/ui/Badge';
 import { SelectField, TextField } from '@/components/ui/Fields';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/ui/States';
-import type { EventLevel, Grade, VexEvent } from '@/data/types';
+import { EVENT_LEVELS, type EventLevel, type Grade, type VexEvent } from '@/data/types';
 import { useActiveSeason, useEventSearch } from '@/data/queries';
 import { useFavorites } from '@/features/favorites/favorites';
 import { formatDateRange, placeLine } from '@/lib/format';
-
-const LEVELS: EventLevel[] = ['World', 'National', 'Signature', 'State', 'Regional', 'Other'];
 
 export function EventSearchPage() {
   const active = useActiveSeason();
@@ -74,7 +72,7 @@ export function EventSearchPage() {
         </SelectField>
         <SelectField label="Level" value={level} onChange={(e) => setLevel(e.target.value as EventLevel | '')}>
           <option value="">All levels</option>
-          {LEVELS.map((l) => (
+          {EVENT_LEVELS.map((l) => (
             <option key={l}>{l}</option>
           ))}
         </SelectField>

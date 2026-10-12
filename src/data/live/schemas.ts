@@ -1,6 +1,6 @@
 /**
- * Runtime validation of API responses (zod). ⚠ Field names are ASSUMED from RobotEvents API v2;
- * see endpoints.ts. Schemas are lenient (nullish everywhere a field might be missing) so that a
+ * Runtime validation of API responses (zod), matching the official OpenAPI spec (swagger v1.0.21).
+ * Schemas are lenient (nullish everywhere a field might be missing) so that a
  * small upstream change degrades gracefully instead of breaking every screen.
  */
 import { z } from 'zod';
@@ -19,6 +19,12 @@ export const LocationSchema = z
     country: z.string().nullish(),
   })
   .nullish();
+
+export const ProgramSchema = z.object({
+  id: z.number(),
+  abbr: z.string().nullish(),
+  name: z.string().nullish(),
+});
 
 export const SeasonSchema = z.object({
   id: z.number(),
@@ -109,7 +115,7 @@ export const AwardSchema = z.object({
   individualWinners: z.array(z.string()).nullish(),
 });
 
-/** ASSUMED shape of the World Skills standings feed. */
+/** ⚠ ASSUMED shape of the World Skills standings feed (not part of the API spec). */
 export const WorldSkillsRowSchema = z.object({
   rank: z.number(),
   team: z.object({

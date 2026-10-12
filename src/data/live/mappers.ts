@@ -1,15 +1,17 @@
 import type { z } from 'zod';
-import type { Award, EventLevel, Grade, Location, Match, ProgramCode, Ranking, Season, SkillsEntry, Team, VexEvent, WorldSkillsEntry } from '../types';
+import { EVENT_LEVELS } from '../types';
+import type { Award, Grade, Location, Match, ProgramCode, Ranking, Season, SkillsEntry, Team, VexEvent, WorldSkillsEntry } from '../types';
 import { PROGRAM_IDS, ROUND_CODES } from './endpoints';
 import type { AwardSchema, EventSchema, LocationSchema, MatchSchema, RankingSchema, SeasonSchema, SkillsSchema, TeamSchema, WorldSkillsRowSchema } from './schemas';
 
 /** Wire format → domain model. Pure functions, so they're easy to adjust once the real API is verified. */
 
-const LEVELS: EventLevel[] = ['World', 'National', 'Signature', 'State', 'Regional', 'Other'];
 const GRADES: Grade[] = ['Middle School', 'High School', 'College'];
 
-function programCode(id: number): ProgramCode {
-  return id === PROGRAM_IDS.VURC ? 'VURC' : 'V5RC';
+/** Program from an embedded IdInfo: prefer its `code` (e.g. "V5RC"), fall back to the known id. */
+function programCode(p: { id: number; code?: string | null }): ProgramCode {
+  if (p.code === 'VURC' || p.code === 'V5RC') return p.code;
+  return p.id === PROGRAM_IDS.VURC ? 'VURC' : 'V5RC';
 }
 
 function location(loc: z.infer<typeof LocationSchema>): Location {
@@ -26,11 +28,11 @@ function ref(r: { id: number; name?: string | null }) {
 }
 
 export function toSeason(s: z.infer<typeof SeasonSchema>): Season {
-  return { id: s.id, name: s.name, program: programCode(s.program.id), start: s.start, end: s.end };
+  return { id: s.id, name: s.name, program: programCode(s.program), start: s.start, end: s.end };
 }
 
 export function toTeam(t: z.infer<typeof TeamSchema>): Team {
-  const program = programCode(t.program.id);
+  const program = programCode(t.program);
   const grade = GRADES.find((g) => g === t.grade) ?? (program === 'VURC' ? 'College' : 'High School');
   return {
     id: t.id,
@@ -53,8 +55,8 @@ export function toEvent(e: z.infer<typeof EventSchema>): VexEvent {
     start: e.start,
     end: e.end,
     seasonId: e.season.id,
-    program: programCode(e.program.id),
-    level: LEVELS.find((l) => l === e.level) ?? 'Other',
+    program: programCode(e.program),
+    level: EVENT_LEVELS.find((l) => l === e.level) ?? 'Other',
     location: location(e.location),
     divisions: [...(e.divisions ?? [])].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((d) => ({ id: d.id, name: d.name })),
   };
@@ -107,7 +109,7 @@ export function toRanking(r: z.infer<typeof RankingSchema>): Ranking {
   };
 }
 
-/** Returns null for skills types we don't model (e.g. legacy "package_running_time"). */
+/** Returns null for skills types we don't model (the API also has "package_delivery_time"). */
 export function toSkills(s: z.infer<typeof SkillsSchema>): SkillsEntry | null {
   if (s.type !== 'driver' && s.type !== 'programming') return null;
   return { eventId: s.event.id, team: ref(s.team), type: s.type, score: s.score, attempts: s.attempts ?? 0, rank: s.rank ?? 0 };

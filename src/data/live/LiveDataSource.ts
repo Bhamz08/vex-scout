@@ -3,20 +3,35 @@ import type { DataSource } from '../DataSource';
 import { db } from '../db';
 import type { EventFilter, Grade, Match, ProgramCode, SkillsEntry, VexEvent } from '../types';
 import { ApiError, getAll, getOne } from './client';
-import { endpoints, WORLD_SKILLS_PROXY } from './endpoints';
+import { endpoints, FALLBACK_PROGRAM_IDS, WORLD_SKILLS_PROXY } from './endpoints';
 import { toAward, toEvent, toMatch, toRanking, toSeason, toSkills, toTeam, toWorldSkills } from './mappers';
-import { AwardSchema, EventSchema, MatchSchema, RankingSchema, SeasonSchema, SkillsSchema, TeamSchema, WorldSkillsRowSchema } from './schemas';
+import { AwardSchema, EventSchema, ProgramSchema, MatchSchema, RankingSchema, SeasonSchema, SkillsSchema, TeamSchema, WorldSkillsRowSchema } from './schemas';
 
-/** VEX Events API v2 via our proxy. See endpoints.ts for the (assumed) wire contract. */
+/** VEX Events API v2 via our proxy. See endpoints.ts for the wire contract. */
 export class LiveDataSource implements DataSource {
   readonly kind = 'live' as const;
+  private programIds: Promise<Record<ProgramCode, number>> | null = null;
+
+  /** Program ids aren't fixed by the spec, so look them up once by abbreviation ("V5RC", "VURC"). */
+  private async programId(code: ProgramCode): Promise<number> {
+    this.programIds ??= getAll(ProgramSchema, endpoints.programs(), 2)
+      .then((programs) => {
+        const find = (abbr: string) => programs.find((p) => p.abbr?.toUpperCase() === abbr)?.id;
+        return { V5RC: find('V5RC') ?? FALLBACK_PROGRAM_IDS.V5RC, VURC: find('VURC') ?? FALLBACK_PROGRAM_IDS.VURC };
+      })
+      .catch(() => {
+        this.programIds = null; // retry next time
+        return FALLBACK_PROGRAM_IDS;
+      });
+    return (await this.programIds)[code];
+  }
 
   async getSeasons(program: ProgramCode) {
-    return (await getAll(SeasonSchema, endpoints.seasons(program))).map(toSeason);
+    return (await getAll(SeasonSchema, endpoints.seasons(await this.programId(program)))).map(toSeason);
   }
 
   async findTeam(number: string, program: ProgramCode) {
-    const rows = await getAll(TeamSchema, endpoints.teamsByNumber(number.trim().toUpperCase(), program), 1);
+    const rows = await getAll(TeamSchema, endpoints.teamsByNumber(number.trim().toUpperCase(), await this.programId(program)), 1);
     const team = rows[0];
     return team ? toTeam(team) : null;
   }
