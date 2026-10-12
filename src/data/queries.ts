@@ -74,7 +74,8 @@ export const useEventSearch = (filter: EventFilter | undefined) =>
 
 export const useEvent = (eventId: number) => useDataQuery(['event', eventId], (ds) => ds.getEvent(eventId));
 
-export const useEventTeams = (eventId: number) => useDataQuery(['eventTeams', eventId], (ds) => ds.getEventTeams(eventId));
+export const useEventTeams = (eventId: number, enabled = true) =>
+  useDataQuery(['eventTeams', eventId], (ds) => ds.getEventTeams(eventId), enabled);
 
 export const useDivisionMatches = (eventId: number, divisionId: number | undefined) =>
   useDataQuery(['matches', eventId, divisionId], (ds) => ds.getDivisionMatches(eventId, divisionId ?? 0), divisionId !== undefined);
