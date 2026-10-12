@@ -1,0 +1,97 @@
+import { z } from 'zod';
+import type { DataSource } from '../DataSource';
+import type { EventFilter, Grade, ProgramCode, SkillsEntry } from '../types';
+import { ApiError, getAll, getOne } from './client';
+import { endpoints, WORLD_SKILLS_PROXY } from './endpoints';
+import { toAward, toEvent, toMatch, toRanking, toSeason, toSkills, toTeam, toWorldSkills } from './mappers';
+import { AwardSchema, EventSchema, MatchSchema, RankingSchema, SeasonSchema, SkillsSchema, TeamSchema, WorldSkillsRowSchema } from './schemas';
+
+/** VEX Events API v2 via our proxy. See endpoints.ts for the (assumed) wire contract. */
+export class LiveDataSource implements DataSource {
+  readonly kind = 'live' as const;
+
+  async getSeasons(program: ProgramCode) {
+    return (await getAll(SeasonSchema, endpoints.seasons(program))).map(toSeason);
+  }
+
+  async findTeam(number: string, program: ProgramCode) {
+    const rows = await getAll(TeamSchema, endpoints.teamsByNumber(number.trim().toUpperCase(), program), 1);
+    const team = rows[0];
+    return team ? toTeam(team) : null;
+  }
+
+  async getTeam(teamId: number) {
+    try {
+      return toTeam(await getOne(TeamSchema, endpoints.team(teamId)));
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 404) return null;
+      throw e;
+    }
+  }
+
+  async getTeamEvents(teamId: number, seasonId?: number) {
+    return (await getAll(EventSchema, endpoints.teamEvents(teamId, seasonId))).map(toEvent);
+  }
+
+  async getTeamMatches(teamId: number, seasonId?: number) {
+    return (await getAll(MatchSchema, endpoints.teamMatches(teamId, seasonId))).map(toMatch);
+  }
+
+  async getTeamRankings(teamId: number, seasonId?: number) {
+    return (await getAll(RankingSchema, endpoints.teamRankings(teamId, seasonId))).map(toRanking);
+  }
+
+  async getTeamSkills(teamId: number, seasonId?: number) {
+    return (await getAll(SkillsSchema, endpoints.teamSkills(teamId, seasonId))).map(toSkills).filter((s): s is SkillsEntry => s !== null);
+  }
+
+  async getTeamAwards(teamId: number, seasonId?: number) {
+    return (await getAll(AwardSchema, endpoints.teamAwards(teamId, seasonId))).map(toAward);
+  }
+
+  async searchEvents(filter: EventFilter) {
+    const events = (await getAll(EventSchema, endpoints.events(filter.seasonId, filter.level, filter.region))).map(toEvent);
+    const q = filter.query?.trim().toLowerCase();
+    // Country and text filters are applied client-side (not known to be supported by the API).
+    // Grade is not part of the event payload, so it can't be filtered here.
+    return events
+      .filter((e) => e.program === filter.program)
+      .filter((e) => !filter.country || e.location.country === filter.country)
+      .filter((e) => !q || [e.name, e.sku, e.location.city].some((s) => s.toLowerCase().includes(q)))
+      .sort((a, b) => a.start.localeCompare(b.start));
+  }
+
+  async getEvent(eventId: number) {
+    try {
+      return toEvent(await getOne(EventSchema, endpoints.event(eventId)));
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 404) return null;
+      throw e;
+    }
+  }
+
+  async getEventTeams(eventId: number) {
+    return (await getAll(TeamSchema, endpoints.eventTeams(eventId))).map(toTeam);
+  }
+
+  async getDivisionMatches(eventId: number, divisionId: number) {
+    return (await getAll(MatchSchema, endpoints.divisionMatches(eventId, divisionId))).map(toMatch);
+  }
+
+  async getDivisionRankings(eventId: number, divisionId: number) {
+    return (await getAll(RankingSchema, endpoints.divisionRankings(eventId, divisionId))).map(toRanking).sort((a, b) => a.rank - b.rank);
+  }
+
+  async getEventSkills(eventId: number) {
+    return (await getAll(SkillsSchema, endpoints.eventSkills(eventId))).map(toSkills).filter((s): s is SkillsEntry => s !== null);
+  }
+
+  async getEventAwards(eventId: number) {
+    return (await getAll(AwardSchema, endpoints.eventAwards(eventId))).map(toAward);
+  }
+
+  async getWorldSkills(seasonId: number, grade: Grade) {
+    const rows = await getOne(z.array(WorldSkillsRowSchema), endpoints.worldSkills(seasonId, grade), WORLD_SKILLS_PROXY);
+    return rows.map(toWorldSkills);
+  }
+}

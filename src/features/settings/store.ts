@@ -30,6 +30,8 @@ export interface Settings {
 
 interface SettingsActions {
   set: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
+  /** Switching program also resets the season, since season ids are per program. */
+  setProgram: (program: ProgramMode) => void;
 }
 
 export const useSettings = create<Settings & SettingsActions>()(
@@ -43,6 +45,7 @@ export const useSettings = create<Settings & SettingsActions>()(
       dataMode: 'demo',
       deviceId: newId(),
       set: (key, value) => set({ [key]: value } as Partial<Settings>),
+      setProgram: (program) => set({ program, seasonId: null }),
     }),
     { name: 'vex-scout-settings', version: 1 },
   ),

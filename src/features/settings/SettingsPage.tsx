@@ -1,8 +1,10 @@
 import { Card } from '@/components/ui/Card';
-import { SelectField, Switch } from '@/components/ui/Fields';
+import { Switch } from '@/components/ui/Fields';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { cn } from '@/lib/cn';
-import { ACCENTS, LIVE_API_AVAILABLE, PROGRAM_MODES, useSettings, type Accent, type ProgramMode, type ThemePref } from './store';
+import { ProgramPicker } from './ProgramPicker';
+import { SeasonPicker } from './SeasonPicker';
+import { ACCENTS, LIVE_API_AVAILABLE, useSettings, type Accent, type ThemePref } from './store';
 
 const THEMES: { id: ThemePref; label: string }[] = [
   { id: 'system', label: 'System' },
@@ -19,13 +21,8 @@ export function SettingsPage() {
       <div className="space-y-4">
         <Card className="space-y-4">
           <h2 className="font-semibold">Competition</h2>
-          <SelectField label="Program" value={s.program} onChange={(e) => s.set('program', e.target.value as ProgramMode)}>
-            {Object.entries(PROGRAM_MODES).map(([id, p]) => (
-              <option key={id} value={id}>
-                {p.label}
-              </option>
-            ))}
-          </SelectField>
+          <ProgramPicker />
+          <SeasonPicker />
         </Card>
 
         <Card className="space-y-4">
