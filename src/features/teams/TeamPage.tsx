@@ -20,10 +20,11 @@ import {
 import { FavoriteButton } from '@/features/favorites/FavoriteButton';
 import { AwardsList } from '@/features/awards/AwardsList';
 import { MatchRow } from '@/features/matches/MatchRow';
+import { TeamNotesPanel } from '@/features/notes/TeamNotesPanel';
 import { formatDateRange, placeLine } from '@/lib/format';
 import { formatRecord, sortMatches, teamRecord } from '@/lib/matches';
 
-type TabId = 'overview' | 'events' | 'matches' | 'awards' | 'skills';
+type TabId = 'overview' | 'events' | 'matches' | 'awards' | 'skills' | 'notes';
 
 export function TeamPage() {
   const { number = '' } = useParams();
@@ -117,6 +118,7 @@ function TeamDetail({
           { id: 'matches', label: 'Matches' },
           { id: 'awards', label: 'Awards' },
           { id: 'skills', label: 'Skills' },
+          { id: 'notes', label: 'Notes' },
         ]}
       />
 
@@ -138,6 +140,7 @@ function TeamDetail({
           <QueryView query={matchesQ}>{(matches) => <MatchesByEvent team={team} matches={matches} events={eventsQ.data?.data ?? []} />}</QueryView>
         )}
         {tab === 'awards' && <QueryView query={awardsQ}>{(awards) => <AwardsList awards={awards} events={eventsQ.data?.data ?? []} />}</QueryView>}
+        {tab === 'notes' && <TeamNotesPanel teamNumber={team.number} />}
         {tab === 'skills' && <QueryView query={skillsQ}>{(skills) => <SkillsByEvent skills={skills} events={eventsQ.data?.data ?? []} />}</QueryView>}
       </div>
     </>

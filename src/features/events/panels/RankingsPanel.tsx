@@ -16,11 +16,12 @@ export interface RankingsExtras {
   below?: (r: Ranking) => ReactNode;
 }
 
-export function RankingsPanel({ event, division, extras }: { event: VexEvent; division: Division; extras?: RankingsExtras }) {
+export function RankingsPanel({ event, division, extras, toolbar }: { event: VexEvent; division: Division; extras?: RankingsExtras; toolbar?: ReactNode }) {
   const rankingsQ = useDivisionRankings(event.id, division.id);
   return (
     <div className="space-y-3">
-      <div className="flex justify-end">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>{toolbar}</div>
         <LastUpdated result={rankingsQ.data} onRefresh={() => void rankingsQ.refetch()} isFetching={rankingsQ.isFetching} />
       </div>
       <QueryView query={rankingsQ}>

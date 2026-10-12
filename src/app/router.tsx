@@ -6,6 +6,7 @@ import { TrueSkillPage } from '@/features/leaderboards/TrueSkillPage';
 import { WorldSkillsPage } from '@/features/leaderboards/WorldSkillsPage';
 import { MatchPage } from '@/features/matches/MatchPage';
 import { MorePage } from '@/features/more/MorePage';
+import { NotesPage } from '@/features/notes/NotesPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
 import { TeamPage } from '@/features/teams/TeamPage';
 import { TeamSearchPage } from '@/features/teams/TeamSearchPage';
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
       { path: '/events/:eventId/divisions/:divisionId/matches/:matchId', element: <MatchPage /> },
       { path: '/leaderboards/skills', element: <WorldSkillsPage /> },
       { path: '/leaderboards/trueskill', element: <TrueSkillPage /> },
+      { path: '/notes', element: <NotesPage /> },
       { path: '/more', element: <MorePage /> },
       { path: '/settings', element: <SettingsPage /> },
       { path: '*', element: <NotFoundPage /> },

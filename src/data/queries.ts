@@ -11,7 +11,7 @@ import { useDataSource } from './useDataSource';
  * (network-first, offline fallback); demo data is generated in memory and needs no cache.
  * Every result carries `fetchedAt` for "last updated" labels.
  */
-function dataQueryOptions<T>(ds: DataSource, key: readonly unknown[], fn: (ds: DataSource) => Promise<T>, enabled = true) {
+export function dataQueryOptions<T>(ds: DataSource, key: readonly unknown[], fn: (ds: DataSource) => Promise<T>, enabled = true) {
   return {
     queryKey: [ds.kind, ...key],
     enabled,

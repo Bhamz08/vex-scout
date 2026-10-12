@@ -1,12 +1,17 @@
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { QueryView } from '@/components/QueryView';
 import { Badge } from '@/components/ui/Badge';
+import { Switch } from '@/components/ui/Fields';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/ui/States';
 import { Tabs } from '@/components/ui/Tabs';
 import { useEvent } from '@/data/queries';
 import type { Division, VexEvent } from '@/data/types';
 import { FavoriteButton } from '@/features/favorites/FavoriteButton';
+import { useAllNotes, useEventScouting } from '@/features/notes/repo';
+import { ScoutingPanel } from '@/features/notes/ScoutingPanel';
+import { ScoutingSummaryView } from '@/features/notes/ScoutingSummaryView';
 import { ExcellencePanel } from '@/features/excellence/ExcellencePanel';
 import { PredictionsPanel } from '@/features/stats/PredictionsPanel';
 import { StatsPanel } from '@/features/stats/StatsPanel';
@@ -19,13 +24,14 @@ import { RankingsPanel } from './panels/RankingsPanel';
 import { SkillsPanel } from './panels/SkillsPanel';
 import { TeamsPanel } from './panels/TeamsPanel';
 
-type TabId = 'matches' | 'rankings' | 'stats' | 'predictions' | 'teams' | 'skills' | 'awards' | 'excellence';
+type TabId = 'matches' | 'rankings' | 'stats' | 'predictions' | 'scouting' | 'teams' | 'skills' | 'awards' | 'excellence';
 
 const TABS: { id: TabId; label: string }[] = [
   { id: 'matches', label: 'Matches' },
   { id: 'rankings', label: 'Rankings' },
   { id: 'stats', label: 'Stats' },
   { id: 'predictions', label: 'Predictions' },
+  { id: 'scouting', label: 'Scouting' },
   { id: 'teams', label: 'Teams' },
   { id: 'skills', label: 'Skills' },
   { id: 'awards', label: 'Awards' },
@@ -42,11 +48,14 @@ export function EventPage() {
   );
 }
 
-const DIVISION_TABS: TabId[] = ['matches', 'rankings', 'stats', 'predictions', 'excellence'];
+const DIVISION_TABS: TabId[] = ['matches', 'rankings', 'stats', 'predictions', 'scouting', 'excellence'];
 
 /** Division-scoped sections. Matches and rankings are decorated with computed stats from the same model. */
 function DivisionTab({ tab, event, division }: { tab: TabId; event: VexEvent; division: Division }) {
   const { model } = useDivisionModel(event, division);
+  const [showNotes, setShowNotes] = useState(false);
+  const scouting = useEventScouting(event.id);
+  const notes = useAllNotes();
   switch (tab) {
     case 'matches':
       return (
@@ -61,7 +70,17 @@ function DivisionTab({ tab, event, division }: { tab: TabId; event: VexEvent; di
         <RankingsPanel
           event={event}
           division={division}
+          toolbar={<Switch label="Show scouting notes" checked={showNotes} onChange={setShowNotes} />}
           extras={{
+            below: showNotes
+              ? (r) => (
+                  <ScoutingSummaryView
+                    compact
+                    scouting={(scouting ?? []).filter((x) => x.teamNumber === r.team.number)}
+                    notes={(notes ?? []).filter((n) => n.teamNumber === r.team.number && (n.eventId === event.id || n.eventId === null))}
+                  />
+                )
+              : undefined,
             headers: ['OPR', 'DPR', 'CCWM'],
             cells: (r) => {
               const s = model?.stats.get(r.team.id);
@@ -74,6 +93,8 @@ function DivisionTab({ tab, event, division }: { tab: TabId; event: VexEvent; di
       return <StatsPanel event={event} division={division} />;
     case 'predictions':
       return <PredictionsPanel event={event} division={division} />;
+    case 'scouting':
+      return <ScoutingPanel event={event} division={division} />;
     case 'excellence':
       return <ExcellencePanel event={event} division={division} />;
     default:

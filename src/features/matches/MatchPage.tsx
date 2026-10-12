@@ -7,6 +7,7 @@ import { EmptyState, Loading } from '@/components/ui/States';
 import { useDivisionRankings, useEvent, useEventSkills, useEventTeams, useTeamAwards, useTeamsMatches } from '@/data/queries';
 import type { AllianceColor, Match, Ranking, Team, TeamRef, VexEvent } from '@/data/types';
 import { combineSkills, type SkillsRow } from '@/features/events/EventSkillsTable';
+import { MatchNotesPanel, TeamScoutingBlock } from '@/features/notes/MatchScoutingPanels';
 import { useDivisionModel } from '@/features/stats/useDivisionModel';
 import { WinProbability } from '@/features/stats/WinProbability';
 import { cn } from '@/lib/cn';
@@ -97,6 +98,9 @@ function MatchScouting({ event, divisionId, matchId }: { event: VexEvent; divisi
         ))}
       </div>
 
+      <div className="mt-6">
+        <MatchNotesPanel match={match} event={event} />
+      </div>
     </>
   );
 }
@@ -172,6 +176,7 @@ function TeamColumn({
         )}
       </div>
 
+      <TeamScoutingBlock team={refTeam} event={event} />
     </Card>
   );
 }
