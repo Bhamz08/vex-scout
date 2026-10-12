@@ -1,0 +1,100 @@
+@import 'tailwindcss';
+
+/* Theme switching is attribute-driven (set in index.html + useApplyTheme), not media-query driven,
+   so "light" / "dark" / "system" all work. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* Design tokens. Every color pair below meets WCAG AA (4.5:1) for text in both themes. */
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --fg: #0f172a;
+  --muted: #475569;
+  --line: #cbd5e1;
+  --red-team: #b91c1c;
+  --red-soft: #fee2e2;
+  --blue-team: #1d4ed8;
+  --blue-soft: #dbeafe;
+  --ok: #047857;
+  --warn: #92400e;
+  --warn-soft: #fef3c7;
+  --bad: #b91c1c;
+  --accent: #1d4ed8;
+  --on-accent: #ffffff;
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #0b1020;
+  --surface: #131a2e;
+  --surface-2: #1b2440;
+  --fg: #e2e8f0;
+  --muted: #a3b1c6;
+  --line: #2a3553;
+  --red-team: #fca5a5;
+  --red-soft: #3b1518;
+  --blue-team: #93c5fd;
+  --blue-soft: #10224a;
+  --ok: #6ee7b7;
+  --warn: #fcd34d;
+  --warn-soft: #3a2a07;
+  --bad: #fca5a5;
+  --on-accent: #0b1020;
+  color-scheme: dark;
+}
+
+[data-accent='blue'] { --accent: #1d4ed8; }
+[data-accent='violet'] { --accent: #6d28d9; }
+[data-accent='emerald'] { --accent: #047857; }
+[data-accent='amber'] { --accent: #b45309; }
+[data-accent='rose'] { --accent: #be123c; }
+[data-theme='dark'][data-accent='blue'] { --accent: #93c5fd; }
+[data-theme='dark'][data-accent='violet'] { --accent: #c4b5fd; }
+[data-theme='dark'][data-accent='emerald'] { --accent: #6ee7b7; }
+[data-theme='dark'][data-accent='amber'] { --accent: #fcd34d; }
+[data-theme='dark'][data-accent='rose'] { --accent: #fda4af; }
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-red-team: var(--red-team);
+  --color-red-soft: var(--red-soft);
+  --color-blue-team: var(--blue-team);
+  --color-blue-soft: var(--blue-soft);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Minimalist mode hides secondary detail marked with .detail */
+[data-minimal='true'] .detail {
+  display: none !important;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
