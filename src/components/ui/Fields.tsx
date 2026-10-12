@@ -101,8 +101,11 @@ export function Stepper({
   min = 0,
   max = 99,
   tone,
+  name,
 }: {
   label: ReactNode;
+  /** Plain-text name for the +/- buttons, e.g. "Red 1 Alliance Goal red halves" (defaults to `label` if it is a string) */
+  name?: string;
   value: number;
   onChange: (v: number) => void;
   min?: number;
@@ -110,6 +113,7 @@ export function Stepper({
   tone?: 'red' | 'blue';
 }) {
   const id = useId();
+  const accessible = name ?? (typeof label === 'string' ? label : '');
   const clamp = (v: number) => Math.max(min, Math.min(max, Number.isFinite(v) ? Math.round(v) : min));
   return (
     <div className="flex items-center justify-between gap-2">
@@ -119,7 +123,7 @@ export function Stepper({
       <div className="flex shrink-0 items-center gap-1">
         <button
           type="button"
-          aria-label="Decrease"
+          aria-label={`Decrease ${accessible}`.trim()}
           className="size-10 rounded-lg border border-line bg-surface-2 text-lg font-bold disabled:opacity-40"
           disabled={value <= min}
           onClick={() => onChange(clamp(value - 1))}
@@ -138,7 +142,7 @@ export function Stepper({
         />
         <button
           type="button"
-          aria-label="Increase"
+          aria-label={`Increase ${accessible}`.trim()}
           className="size-10 rounded-lg border border-line bg-surface-2 text-lg font-bold disabled:opacity-40"
           disabled={value >= max}
           onClick={() => onChange(clamp(value + 1))}
