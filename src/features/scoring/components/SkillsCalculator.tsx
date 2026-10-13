@@ -12,6 +12,7 @@ import { skillsV5rcRules, skillsVexuRules } from '../rules/skills';
 import { useScoringStore } from '../store';
 import { FieldEditor } from './FieldEditor';
 import { RulesInfo } from './RulesInfo';
+import { ScoreFigure, Scoreboard } from './Scoreboard';
 import { SkillsChart } from './SkillsChart';
 
 const VARIANTS = { 'skills-v5rc': skillsV5rcRules, 'skills-vexu': skillsVexuRules } as const;
@@ -75,23 +76,20 @@ export function SkillsCalculator() {
         <MatchTimer key={`${rules.id}-${calc.runType}`} periods={periods} compact />
       </Card>
 
-      <Card className="sticky top-16 z-20 flex items-center justify-between shadow-sm">
-        <div>
-          <div className="text-xs font-semibold text-muted uppercase">{calc.runType === 'driver' ? 'Driver' : 'Programming'} run</div>
-          <div className="tabular text-4xl font-bold" aria-live="polite">
-            {result.total}
-          </div>
+      <Scoreboard>
+        <div className="flex items-center justify-between" aria-live="polite">
+          <ScoreFigure label={`${calc.runType === 'driver' ? 'Driver' : 'Programming'} run`} value={result.total} />
+          <button
+            type="button"
+            className="rounded border border-white/25 px-3 py-1.5 font-display text-sm font-semibold tracking-wider text-[#ecebe6] uppercase hover:border-white/60"
+            onClick={() => {
+              if (window.confirm('Clear the field inputs?')) reset('skills');
+            }}
+          >
+            Reset
+          </button>
         </div>
-        <Button
-          variant="danger"
-          size="sm"
-          onClick={() => {
-            if (window.confirm('Clear the field inputs?')) reset('skills');
-          }}
-        >
-          Reset
-        </Button>
-      </Card>
+      </Scoreboard>
 
       <FieldEditor
         layout={rules.field}
@@ -148,7 +146,7 @@ export function SkillsCalculator() {
             ['Best programming', best.programming],
             ['Best combined', best.combined],
           ].map(([label, v]) => (
-            <div key={label} className="rounded-lg bg-surface-2 p-2">
+            <div key={label} className="rounded bg-surface-2 p-2">
               <div className="text-xs text-muted">{label}</div>
               <div className="tabular text-2xl font-bold">{v}</div>
             </div>

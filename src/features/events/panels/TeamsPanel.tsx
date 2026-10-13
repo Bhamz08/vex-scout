@@ -32,10 +32,10 @@ function filterTeams(teams: Team[], q: string): Team[] {
 function TeamList({ teams }: { teams: Team[] }) {
   if (!teams.length) return <EmptyState title="No teams" />;
   return (
-    <ul className="grid gap-2 sm:grid-cols-2">
+    <ul className="grid border-t border-line sm:grid-cols-2 sm:gap-x-8">
       {teams.map((t) => (
         <li key={t.id}>
-          <Link to={`/teams/${encodeURIComponent(t.number)}`} className="block rounded-xl border border-line bg-surface p-3 hover:border-accent">
+          <Link to={`/teams/${encodeURIComponent(t.number)}`} className="block border-b border-line px-1 py-3 transition-colors hover:bg-surface-2">
             <span className="font-semibold">{t.number}</span> <span>{t.name}</span>
             <span className="detail block text-sm text-muted">
               {t.organization} · {placeLine(t.location)} · {t.grade}

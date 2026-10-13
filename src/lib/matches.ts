@@ -55,13 +55,25 @@ export function formatRecord(r: Pick<WinLoss, 'wins' | 'losses' | 'ties'>): stri
 const ROUND_ORDER: Record<MatchRound, number> = { practice: 0, qualification: 1, r16: 2, quarterfinal: 3, semifinal: 4, final: 5, other: 6 };
 
 export function sortMatches(matches: Match[]): Match[] {
+  // Round first: elimination matches often have no scheduled time and would otherwise sort ahead of quals.
   return [...matches].sort(
     (a, b) =>
-      (a.scheduled ?? '').localeCompare(b.scheduled ?? '') ||
       ROUND_ORDER[a.round] - ROUND_ORDER[b.round] ||
+      (a.scheduled ?? '').localeCompare(b.scheduled ?? '') ||
       a.instance - b.instance ||
       a.matchnum - b.matchnum,
   );
+}
+
+const ROUND_PREFIX: Partial<Record<MatchRound, string>> = { practice: 'P', qualification: 'Q', r16: 'R16', quarterfinal: 'QF', semifinal: 'SF', final: 'F' };
+
+/** Compact scoreboard label: "Q12", "R16 2-1", "QF 1-1", "SF 2-3", "F 1". Falls back to the API name. */
+export function shortMatchName(m: Pick<Match, 'round' | 'instance' | 'matchnum' | 'name'>): string {
+  const prefix = ROUND_PREFIX[m.round];
+  if (!prefix) return m.name;
+  if (m.round === 'practice' || m.round === 'qualification') return `${prefix}${m.matchnum}`;
+  if (m.round === 'final') return `${prefix} ${m.matchnum}`;
+  return `${prefix} ${m.instance}-${m.matchnum}`;
 }
 
 export const ROUND_LABELS: Record<MatchRound, string> = {

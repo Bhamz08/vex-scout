@@ -7,19 +7,21 @@ export interface TabItem<T extends string> {
 }
 
 /**
- * Accessible segmented tab list (WAI-ARIA tabs pattern): arrow keys, Home and End move
- * between tabs. The caller renders the active panel.
+ * Accessible tab strip (WAI-ARIA tabs pattern): arrow keys, Home and End move between tabs.
+ * Styled as an underlined row; `variant="pill"` gives a compact segmented control for small choices.
  */
 export function Tabs<T extends string>({
   items,
   value,
   onChange,
   label,
+  variant = 'line',
 }: {
   items: TabItem<T>[];
   value: T;
   onChange: (id: T) => void;
   label: string;
+  variant?: 'line' | 'pill';
 }) {
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -39,7 +41,14 @@ export function Tabs<T extends string>({
   };
 
   return (
-    <div role="tablist" aria-label={label} className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1">
+    <div
+      role="tablist"
+      aria-label={label}
+      className={cn(
+        'flex overflow-x-auto [scrollbar-width:none]',
+        variant === 'line' ? 'gap-5 border-b border-line' : 'w-fit max-w-full gap-0.5 rounded border border-line bg-surface-2 p-0.5',
+      )}
+    >
       {items.map((item, i) => {
         const selected = item.id === value;
         return (
@@ -55,8 +64,10 @@ export function Tabs<T extends string>({
             onClick={() => onChange(item.id)}
             onKeyDown={(e) => onKeyDown(e, i)}
             className={cn(
-              'min-h-10 shrink-0 rounded-lg border px-3 text-sm font-medium whitespace-nowrap',
-              selected ? 'border-accent bg-accent text-on-accent' : 'border-line bg-surface text-fg hover:bg-surface-2',
+              'shrink-0 font-display font-semibold tracking-wide whitespace-nowrap uppercase transition-colors',
+              variant === 'line'
+                ? cn('-mb-px min-h-11 border-b-[3px] text-[0.95rem]', selected ? 'border-fg text-fg dark:border-accent' : 'border-transparent text-muted hover:text-fg')
+                : cn('min-h-9 rounded-sm px-3 text-sm', selected ? 'bg-fg text-bg' : 'text-muted hover:text-fg'),
             )}
           >
             {item.label}

@@ -154,6 +154,10 @@ Vitest covers:
 
 CI runs typecheck, lint, tests and build on every push ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
 
+## Design
+
+A "scoreboard" look: Barlow Condensed for headings and numbers, IBM Plex Sans for text (both bundled for offline use), warm paper / graphite neutrals, and one signal-yellow accent taken from Override's yellow pins. Red and blue are reserved for alliances. Pages are divided with hairline rules rather than stacks of cards. Tokens live in `src/index.css`.
+
 ## Accessibility
 
 - Keyboard navigable: skip link, arrow-key tabs, visible focus rings.

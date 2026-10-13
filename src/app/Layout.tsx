@@ -1,8 +1,9 @@
 import { Link, NavLink, Outlet, ScrollRestoration } from 'react-router-dom';
 import { EventIcon, HomeIcon, MoreIcon, ScoreIcon, SettingsIcon, TeamIcon } from '@/components/icons';
 import { cn } from '@/lib/cn';
-import { ProgramBadge } from './ProgramBadge';
+import { Logo } from './Logo';
 import { OfflineBanner } from './OfflineBanner';
+import { ProgramBadge } from './ProgramBadge';
 import { UpdatePrompt } from './UpdatePrompt';
 
 const NAV = [
@@ -13,49 +14,53 @@ const NAV = [
   { to: '/more', label: 'More', Icon: MoreIcon, end: false },
 ] as const;
 
+/**
+ * App frame. The header and mobile tab bar are a fixed graphite "scoreboard" strip in both themes,
+ * so the yellow accent always sits on a dark ground.
+ */
 export function Layout() {
   return (
     <div className="flex min-h-dvh flex-col">
-      <a href="#main" className="sr-only z-50 rounded bg-accent px-3 py-2 text-on-accent focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
+      <a href="#main" className="sr-only z-50 bg-accent px-3 py-2 text-on-accent focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
         Skip to content
       </a>
-      <header className="sticky top-0 z-30 border-b border-line bg-surface/95 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-5xl items-center gap-3 px-4">
-          <Link to="/" className="flex items-center gap-2 font-bold">
-            <img src="/favicon.svg" alt="" className="size-7" />
-            <span>VEX Scout</span>
+      <header className="sticky top-0 z-30 border-b border-white/10 bg-[#141417] text-[#ecebe6]">
+        <div className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-4">
+          <Link to="/" className="flex items-center gap-2.5" aria-label="VEX Scout home">
+            <Logo className="size-7" />
+            <span className="font-display text-xl font-bold tracking-wide uppercase">VEX Scout</span>
           </Link>
           <ProgramBadge />
-          <nav aria-label="Primary" className="ml-auto hidden gap-1 md:flex">
+          <nav aria-label="Primary" className="ml-auto hidden h-full md:flex">
             {NAV.map(({ to, label, end }) => (
               <NavLink
                 key={to}
                 to={to}
                 end={end}
                 className={({ isActive }) =>
-                  cn('rounded-lg px-3 py-2 text-sm font-medium', isActive ? 'bg-accent text-on-accent' : 'hover:bg-surface-2')
+                  cn(
+                    'flex h-full items-center border-b-[3px] px-3 pt-[3px] font-display text-[0.95rem] font-semibold tracking-wider uppercase transition-colors',
+                    isActive ? 'border-accent text-white' : 'border-transparent text-[#a8a7ae] hover:text-white',
+                  )
                 }
               >
                 {label}
               </NavLink>
             ))}
           </nav>
-          <Link to="/settings" className="ml-auto rounded-lg p-2 hover:bg-surface-2 md:ml-0" aria-label="Settings">
-            <SettingsIcon />
+          <Link to="/settings" className="ml-auto rounded p-2 text-[#a8a7ae] hover:text-white md:ml-1" aria-label="Settings">
+            <SettingsIcon width={20} height={20} />
           </Link>
         </div>
       </header>
 
       <OfflineBanner />
 
-      <main id="main" className="mx-auto w-full max-w-5xl flex-1 px-4 pt-4 pb-28 md:pb-10">
+      <main id="main" className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 md:pb-16">
         <Outlet />
       </main>
 
-      <nav
-        aria-label="Primary"
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
-      >
+      <nav aria-label="Primary" className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-[#141417] pb-[env(safe-area-inset-bottom)] md:hidden">
         <ul className="grid grid-cols-5">
           {NAV.map(({ to, label, Icon, end }) => (
             <li key={to}>
@@ -63,13 +68,16 @@ export function Layout() {
                 to={to}
                 end={end}
                 className={({ isActive }) =>
-                  cn('flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-medium', isActive ? 'text-accent' : 'text-muted')
+                  cn(
+                    'flex min-h-14 flex-col items-center justify-center gap-0.5 border-t-[3px] font-display text-xs font-semibold tracking-wider uppercase',
+                    isActive ? 'border-accent text-white' : 'border-transparent text-[#a8a7ae]',
+                  )
                 }
               >
                 {({ isActive }) => (
                   <>
-                    <Icon strokeWidth={isActive ? 2.5 : 2} />
-                    <span className={cn(isActive && 'underline underline-offset-4')}>{label}</span>
+                    <Icon width={20} height={20} strokeWidth={isActive ? 2.25 : 1.75} className={isActive ? 'text-accent' : undefined} />
+                    <span>{label}</span>
                   </>
                 )}
               </NavLink>

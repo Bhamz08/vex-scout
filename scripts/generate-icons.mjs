@@ -4,8 +4,8 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { deflateSync } from 'node:zlib';
 
-const BG = [29, 78, 216]; // #1d4ed8
-const FG = [255, 255, 255];
+const BG = [242, 194, 0]; // #f2c200 signal yellow
+const FG = [20, 20, 23]; // #141417 ink
 
 const CRC_TABLE = Array.from({ length: 256 }, (_, n) => {
   let c = n;

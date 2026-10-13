@@ -8,11 +8,12 @@ import { useDivisionRankings, useEvent, useEventSkills, useEventTeams, useTeamAw
 import type { AllianceColor, Match, Ranking, Team, TeamRef, VexEvent } from '@/data/types';
 import { combineSkills, type SkillsRow } from '@/features/events/EventSkillsTable';
 import { MatchNotesPanel, TeamScoutingBlock } from '@/features/notes/MatchScoutingPanels';
+import { ScoreFigure, Scoreboard } from '@/features/scoring/components/Scoreboard';
 import { useDivisionModel } from '@/features/stats/useDivisionModel';
 import { WinProbability } from '@/features/stats/WinProbability';
 import { cn } from '@/lib/cn';
 import { formatDayTime, formatNumber } from '@/lib/format';
-import { formatRecord, teamRecord } from '@/lib/matches';
+import { formatRecord, shortMatchName, teamRecord } from '@/lib/matches';
 import type { TeamStats } from '@/lib/stats/opr';
 
 export function MatchPage() {
@@ -53,7 +54,8 @@ function MatchScouting({ event, divisionId, matchId }: { event: VexEvent; divisi
   return (
     <>
       <PageHeader
-        title={`${match.name} · Pre-match scouting`}
+        eyebrow="Pre-match scouting"
+        title={shortMatchName(match)}
         subtitle={
           <>
             <Link to={`/events/${event.id}?tab=matches&div=${divisionId}`} className="hover:underline">
@@ -67,11 +69,15 @@ function MatchScouting({ event, divisionId, matchId }: { event: VexEvent; divisi
       />
 
       <Card className="mb-4 space-y-3">
-        {match.scored ? (
-          <p className="tabular text-lg font-semibold">
-            Final: <span className="text-red-team">Red {match.red.score}</span> – <span className="text-blue-team">{match.blue.score} Blue</span>
-          </p>
-        ) : null}
+        {match.scored && match.red.score !== null && match.blue.score !== null && (
+          <Scoreboard footer="Final score">
+            <div className="flex items-center justify-around">
+              <ScoreFigure label="Red" value={match.red.score} tone="red" />
+              <span className="eyebrow text-[#a8a7ae]">vs</span>
+              <ScoreFigure label="Blue" value={match.blue.score} tone="blue" />
+            </div>
+          </Scoreboard>
+        )}
         <WinProbability red={prediction.redWinProbability} />
         <p className="tabular text-sm">
           Predicted score: <span className="text-red-team">Red {Math.round(prediction.redScore)}</span> –{' '}

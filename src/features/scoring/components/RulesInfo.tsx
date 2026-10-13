@@ -19,11 +19,11 @@ export function RulesInfo({ rules, children }: { rules: ScoringRules; children: 
           {children}
           <p>
             This is a summary to help you use the calculator, not the rules. Read the{' '}
-            <a href={rules.manual.url} target="_blank" rel="noreferrer" className="text-accent underline">
+            <a href={rules.manual.url} target="_blank" rel="noreferrer" className="text-accent-ink underline">
               official Game Manual
             </a>{' '}
             and the{' '}
-            <a href={rules.manual.qaUrl} target="_blank" rel="noreferrer" className="text-accent underline">
+            <a href={rules.manual.qaUrl} target="_blank" rel="noreferrer" className="text-accent-ink underline">
               official Q&amp;A
             </a>{' '}
             for rulings.

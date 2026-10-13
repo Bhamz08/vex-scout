@@ -34,7 +34,7 @@ export function SettingsPage() {
                 <label
                   key={t.id}
                   className={cn(
-                    'flex min-h-11 cursor-pointer items-center justify-center rounded-lg border text-sm font-medium',
+                    'flex min-h-11 cursor-pointer items-center justify-center rounded border text-sm font-medium',
                     s.theme === t.id ? 'border-accent bg-accent text-on-accent' : 'border-line',
                   )}
                 >
@@ -50,7 +50,7 @@ export function SettingsPage() {
               {ACCENTS.map((a: Accent) => (
                 <label key={a} data-accent={a} className="cursor-pointer">
                   <input type="radio" name="accent" className="peer sr-only" checked={s.accent === a} onChange={() => s.set('accent', a)} />
-                  <span className="flex min-h-11 items-center gap-2 rounded-lg border border-line px-3 text-sm capitalize peer-checked:border-2 peer-checked:border-fg peer-checked:font-semibold peer-focus-visible:outline-2 peer-focus-visible:outline-accent">
+                  <span className="flex min-h-11 items-center gap-2 rounded border border-line px-3 text-sm capitalize peer-checked:border-2 peer-checked:border-fg peer-checked:font-semibold peer-focus-visible:outline-2 peer-focus-visible:outline-accent">
                     <span className="size-4 rounded-full bg-accent" aria-hidden="true" />
                     {a}
                     {s.accent === a && <span aria-hidden="true">✓</span>}

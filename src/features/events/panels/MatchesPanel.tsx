@@ -56,10 +56,10 @@ function MatchList({ event, matches, show, team, renderExtra }: { event: VexEven
     <div className="space-y-6">
       {[...groups.entries()].map(([round, list]) => (
         <section key={round} className="space-y-2">
-          <h3 className="font-semibold">
-            {ROUND_LABELS[round]} <span className="text-sm font-normal text-muted">({list.length})</span>
+          <h3 className="text-2xl font-semibold uppercase">
+            {ROUND_LABELS[round]} <span className="num text-lg text-muted">{list.length}</span>
           </h3>
-          <ul className="space-y-2">
+          <ul className="border-t border-line">
             {list.map((m) => (
               <li key={m.id}>
                 <MatchRow match={m} highlightTeamId={highlight} href={`/events/${event.id}/divisions/${m.divisionId}/matches/${m.id}`} extra={renderExtra?.(m)} />

@@ -63,9 +63,10 @@ export function toEvent(e: z.infer<typeof EventSchema>): VexEvent {
 }
 
 export function toMatch(m: z.infer<typeof MatchSchema>): Match {
+  // Decide "played" once per match: the API sometimes has scored=false with a non-zero score on one side.
+  const played = m.scored || m.alliances.some((x) => (x.score ?? 0) > 0);
   const alliance = (color: 'red' | 'blue') => {
     const a = m.alliances.find((x) => x.color === color);
-    const played = m.scored || (a?.score ?? 0) > 0;
     return {
       color,
       score: played ? (a?.score ?? 0) : null,

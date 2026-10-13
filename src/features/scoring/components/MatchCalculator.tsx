@@ -8,6 +8,7 @@ import { evaluateAwp, scoreMatch } from '../engine';
 import type { AllianceColor, MatchRules } from '../rules/types';
 import { useScoringStore } from '../store';
 import { MatchBreakdown } from './Breakdown';
+import { ScoreFigure, Scoreboard } from './Scoreboard';
 import { FieldEditor } from './FieldEditor';
 import { RulesInfo } from './RulesInfo';
 
@@ -52,23 +53,20 @@ export function MatchCalculator({ rules }: { rules: MatchRules }) {
         </p>
       </RulesInfo>
 
-      <Card className="sticky top-16 z-20 space-y-2 shadow-sm">
-        <div className="flex items-center justify-around text-center" aria-live="polite">
-          <div>
-            <div className="text-xs font-bold text-red-team uppercase">Red</div>
-            <div className="tabular text-4xl font-bold text-red-team">{result.final.red.total}</div>
-          </div>
-          <div className="text-sm text-muted">vs</div>
-          <div>
-            <div className="text-xs font-bold text-blue-team uppercase">Blue</div>
-            <div className="tabular text-4xl font-bold text-blue-team">{result.final.blue.total}</div>
-          </div>
+      <Scoreboard
+        footer={
+          <>
+            Auton bonus: {result.autonomous.bonus.reason} →{' '}
+            {result.autonomous.bonus.winner === 'none' ? 'not awarded' : result.autonomous.bonus.winner === 'tie' ? 'split' : `${result.autonomous.bonus.winner} +${b.points}`}
+          </>
+        }
+      >
+        <div className="flex items-center justify-around" aria-live="polite">
+          <ScoreFigure label="Red" value={result.final.red.total} tone="red" />
+          <span className="eyebrow text-[#a8a7ae]">vs</span>
+          <ScoreFigure label="Blue" value={result.final.blue.total} tone="blue" />
         </div>
-        <p className="text-center text-xs text-muted">
-          Auton bonus: {result.autonomous.bonus.reason} →{' '}
-          {result.autonomous.bonus.winner === 'none' ? 'not awarded' : result.autonomous.bonus.winner === 'tie' ? 'split' : `${result.autonomous.bonus.winner} +${b.points}`}
-        </p>
-      </Card>
+      </Scoreboard>
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <Tabs<Snapshot>
@@ -161,7 +159,7 @@ function AwpColumn({
   const list = conditions.map((c) => (c.label.startsWith('No violations') ? { ...c, met: !violation, detail: violation ? 'Violation' : 'None' } : c));
   const earned = list.every((c) => c.met);
   return (
-    <div className={cn('space-y-2 rounded-xl border-l-4 p-3', color === 'red' ? 'border-red-team bg-red-soft' : 'border-blue-team bg-blue-soft')}>
+    <div className={cn('space-y-2 rounded-md border-l-4 p-3', color === 'red' ? 'border-red-team bg-red-soft' : 'border-blue-team bg-blue-soft')}>
       <div className="flex items-center justify-between font-semibold">
         <span className={color === 'red' ? 'text-red-team' : 'text-blue-team'}>{color === 'red' ? 'Red' : 'Blue'}</span>
         <span>{earned ? '✓ AWP earned' : '✗ Not earned'}</span>

@@ -15,12 +15,17 @@ export function MorePage() {
   return (
     <>
       <PageHeader title="More" />
-      <ul className="grid gap-3 sm:grid-cols-2">
+      <ul className="grid border-t border-line sm:grid-cols-2 sm:gap-x-8">
         {LINKS.map((l) => (
           <li key={l.to}>
-            <Link to={l.to} className="block rounded-xl border border-line bg-surface p-4 hover:border-accent">
-              <span className="font-semibold">{l.title}</span>
-              <span className="mt-1 block text-sm text-muted">{l.body}</span>
+            <Link to={l.to} className="group flex h-full items-center justify-between gap-4 border-b border-line px-1 py-4 transition-colors hover:bg-surface-2">
+              <span>
+              <span className="block font-display text-xl font-semibold uppercase">{l.title}</span>
+              <span className="mt-0.5 block text-sm text-muted">{l.body}</span>
+              </span>
+              <span aria-hidden="true" className="font-display text-xl text-muted transition-transform group-hover:translate-x-1 group-hover:text-fg">
+                →
+              </span>
             </Link>
           </li>
         ))}

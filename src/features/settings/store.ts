@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import { newId } from '@/lib/id';
 
 export type ThemePref = 'light' | 'dark' | 'system';
-export const ACCENTS = ['blue', 'violet', 'emerald', 'amber', 'rose'] as const;
+export const ACCENTS = ['signal', 'blue', 'emerald', 'rose', 'violet'] as const;
 export type Accent = (typeof ACCENTS)[number];
 
 /** The competition "mode" the app is in. Drives default filters and which program's data is shown. */
@@ -35,7 +35,7 @@ export const useSettings = create<Settings & SettingsActions>()(
   persist(
     (set) => ({
       theme: 'system',
-      accent: 'blue',
+      accent: 'signal',
       minimalist: false,
       program: 'V5RC_HS',
       seasonId: null,

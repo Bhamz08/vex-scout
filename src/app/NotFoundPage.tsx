@@ -4,7 +4,7 @@ import { EmptyState } from '@/components/ui/States';
 export function NotFoundPage() {
   return (
     <EmptyState title="Page not found">
-      <Link to="/" className="text-accent underline">
+      <Link to="/" className="text-accent-ink underline">
         Go home
       </Link>
     </EmptyState>

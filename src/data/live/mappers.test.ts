@@ -69,6 +69,8 @@ describe('live API schemas + mappers', () => {
       });
     expect(toMatch(raw(false, 0, 0))).toMatchObject({ scored: false, round: 'qualification', red: { score: null }, field: 'Field 1' });
     expect(toMatch(raw(true, 40, 31))).toMatchObject({ scored: true, red: { score: 40, teams: [{ number: '1234A' }] }, blue: { score: 31 } });
+    // Seen in real data: scored=false but one side has points. Treat the whole match as played.
+    expect(toMatch(raw(false, 0, 68))).toMatchObject({ scored: true, red: { score: 0 }, blue: { score: 68 } });
   });
 
   it('maps rankings, skills and awards; drops skills types we do not model', () => {

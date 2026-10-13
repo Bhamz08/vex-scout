@@ -52,7 +52,7 @@ export function EventSearchPage() {
           <ul className="flex flex-wrap gap-2">
             {favorites.map((f) => (
               <li key={f.id}>
-                <Link to={`/events/${f.refId}`} className="inline-flex min-h-11 items-center rounded-lg border border-line bg-surface px-3 hover:border-accent">
+                <Link to={`/events/${f.refId}`} className="inline-flex min-h-10 items-center gap-2 rounded border border-line bg-surface px-3 transition-colors hover:border-fg">
                   {f.label}
                 </Link>
               </li>
@@ -109,7 +109,7 @@ export function EventSearchPage() {
           const list = filtered(events);
           if (!list.length) return <EmptyState title="No events match these filters" />;
           return (
-            <ul className="space-y-2">
+            <ul className="border-t border-line">
               {list.map((e) => (
                 <li key={e.id}>
                   <EventCard event={e} />
@@ -123,16 +123,26 @@ export function EventSearchPage() {
   );
 }
 
+const monthFmt = new Intl.DateTimeFormat(undefined, { month: 'short' });
+
+/** Event row with a calendar-style date block. */
 export function EventCard({ event }: { event: VexEvent }) {
+  const start = new Date(event.start);
   return (
-    <Link to={`/events/${event.id}`} className="block rounded-xl border border-line bg-surface p-3 hover:border-accent">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="font-semibold">{event.name}</span>
-        <Badge>{event.level}</Badge>
+    <Link to={`/events/${event.id}`} className="flex gap-4 border-b border-line px-1 py-3 transition-colors hover:bg-surface-2">
+      <div className="w-12 shrink-0 border-r border-line pr-3 text-center" aria-hidden="true">
+        <div className="eyebrow text-[0.7rem]">{monthFmt.format(start)}</div>
+        <div className="num text-3xl leading-none">{start.getDate()}</div>
       </div>
-      <div className="text-sm text-muted">
-        {formatDateRange(event.start, event.end)} · {placeLine(event.location)}
-        <span className="detail"> · {event.sku}</span>
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-medium">{event.name}</span>
+          <Badge>{event.level}</Badge>
+        </div>
+        <div className="text-sm text-muted">
+          {formatDateRange(event.start, event.end)} · {placeLine(event.location)}
+          <span className="detail"> · {event.sku}</span>
+        </div>
       </div>
     </Link>
   );

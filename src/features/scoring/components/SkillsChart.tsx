@@ -85,7 +85,7 @@ export function SkillsChart({ runs }: { runs: SkillsRunRecord[] }) {
           })}
         </svg>
         {hovered && (
-          <div className="pointer-events-none absolute top-1 right-1 rounded-lg border border-line bg-surface px-2 py-1 text-xs shadow">
+          <div className="pointer-events-none absolute top-1 right-1 rounded border border-line bg-surface px-2 py-1 text-xs shadow">
             <span className="font-semibold">{hovered.type === 'driver' ? 'Driver' : 'Programming'}</span> {hovered.score} ·{' '}
             {formatDate(new Date(hovered.createdAt).toISOString())}
           </div>

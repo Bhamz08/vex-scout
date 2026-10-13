@@ -97,7 +97,7 @@ function SkillsTable({ entries }: { entries: WorldSkillsEntry[] }) {
         </table>
       </div>
       {filtered.length > limit && (
-        <button type="button" className="min-h-11 w-full rounded-lg border border-line" onClick={() => setLimit((l) => l + PAGE)}>
+        <button type="button" className="min-h-11 w-full rounded border border-line" onClick={() => setLimit((l) => l + PAGE)}>
           Show more ({filtered.length - limit} left)
         </button>
       )}

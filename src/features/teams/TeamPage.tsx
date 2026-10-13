@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { LastUpdated } from '@/components/LastUpdated';
 import { QueryView } from '@/components/QueryView';
-import { Card } from '@/components/ui/Card';
 import { SelectField } from '@/components/ui/Fields';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState, Loading } from '@/components/ui/States';
@@ -38,7 +37,7 @@ export function TeamPage() {
           <TeamDetail team={team} seasons={seasons} defaultSeason={seasonId} />
         ) : (
           <EmptyState title={`No team ${number.toUpperCase()} found`}>
-            Check the number and the program in <Link to="/settings" className="text-accent underline">Settings</Link>.
+            Check the number and the program in <Link to="/settings" className="text-accent-ink underline">Settings</Link>.
           </EmptyState>
         )
       }
@@ -77,14 +76,16 @@ function TeamDetail({
   return (
     <>
       <PageHeader
+        eyebrow={`${team.grade} · ${team.program === 'VURC' ? 'VEX U' : 'V5RC'}`}
         title={
           <>
-            {team.number} <span className="font-normal text-muted">{team.name}</span>
+            {team.number}
+            {team.name && <span className="block text-2xl font-semibold text-muted sm:text-3xl">{team.name}</span>}
           </>
         }
         subtitle={
           <>
-            {team.organization} · {placeLine(team.location)} · {team.grade}
+            {team.organization} · {placeLine(team.location)}
             {team.robotName && <span className="detail"> · Robot “{team.robotName}”</span>}
           </>
         }
@@ -94,7 +95,7 @@ function TeamDetail({
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <SelectField
           label="Season"
-          className="w-full sm:w-72"
+          className="w-full sm:w-[26rem]"
           value={seasonChoice === undefined ? String(defaultSeason ?? 'all') : String(seasonChoice)}
           onChange={(e) => setSeasonChoice(e.target.value === 'all' ? 'all' : Number(e.target.value))}
         >
@@ -149,11 +150,11 @@ function TeamDetail({
 
 function Stat({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
   return (
-    <Card className="p-3">
-      <div className="text-xs font-medium text-muted uppercase">{label}</div>
-      <div className="tabular text-2xl font-bold">{value}</div>
-      {hint && <div className="detail text-xs text-muted">{hint}</div>}
-    </Card>
+    <div className="border-r border-b border-line p-4">
+      <div className="eyebrow">{label}</div>
+      <div className="num mt-1 text-4xl leading-none">{value}</div>
+      {hint && <div className="detail mt-1 text-xs text-muted">{hint}</div>}
+    </div>
   );
 }
 
@@ -188,7 +189,7 @@ function Overview({
   const bestRank = rankings.length ? Math.min(...rankings.map((r) => r.rank)) : null;
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+    <div className="grid grid-cols-2 border-t border-l border-line md:grid-cols-4">
       <Stat label="Record (W-L-T)" value={record ? formatRecord(record) : '–'} hint={winRate !== null ? `${winRate}% wins` : undefined} />
       <Stat label="Events" value={events.length} />
       <Stat label="Awards" value={awards.length} />
@@ -204,12 +205,12 @@ function Overview({
 function EventsList({ events, rankings }: { events: VexEvent[]; rankings: Ranking[] }) {
   if (!events.length) return <EmptyState title="No events this season" />;
   return (
-    <ul className="space-y-2">
+    <ul className="border-t border-line">
       {events.map((e) => {
         const r = rankings.find((x) => x.eventId === e.id);
         return (
           <li key={e.id}>
-            <Link to={`/events/${e.id}`} className="block rounded-xl border border-line bg-surface p-3 hover:border-accent">
+            <Link to={`/events/${e.id}`} className="block border-b border-line px-1 py-3 transition-colors hover:bg-surface-2">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <span className="font-semibold">{e.name}</span>
                 {r && (
@@ -245,7 +246,7 @@ function MatchesByEvent({ team, matches, events }: { team: Team; matches: Match[
               </Link>{' '}
               <span className="text-sm font-normal text-muted">{formatRecord(teamRecord(list, team.id))}</span>
             </h3>
-            <ul className="space-y-2">
+            <ul className="border-t border-line">
               {list.map((m) => (
                 <li key={m.id}>
                   <MatchRow match={m} highlightTeamId={team.id} href={`/events/${m.eventId}/divisions/${m.divisionId}/matches/${m.id}`} />

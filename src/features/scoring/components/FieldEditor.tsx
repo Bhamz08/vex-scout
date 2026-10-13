@@ -33,8 +33,8 @@ export function FieldEditor({
         {layout.quadrants.map((q) => {
           const qs = value.quadrants[q.id];
           return (
-            <fieldset key={q.id} className={cn('space-y-3 rounded-xl border-2 bg-surface p-3', q.color === 'red' ? 'border-red-team' : 'border-blue-team')}>
-              <legend className="px-1 font-semibold">{q.label} quadrant</legend>
+            <fieldset key={q.id} className={cn('space-y-3 rounded-md border border-t-4 border-line bg-surface p-3 pt-2', q.color === 'red' ? 'border-t-red-team' : 'border-t-blue-team')}>
+              <legend className="float-left mb-1 w-full font-display text-xl font-semibold uppercase">{q.label} quadrant</legend>
               <ToggleInput value={qs.toggle} onChange={(toggle) => setQuadrant(q.id, { ...qs, toggle })} />
               {layout.goalsPerQuadrant.map((g) => {
                 const key = g.kind === 'alliance' ? 'allianceGoal' : 'neutralGoal';
@@ -53,8 +53,8 @@ export function FieldEditor({
         })}
       </div>
 
-      <fieldset className="space-y-3 rounded-xl border-2 border-warn bg-surface p-3">
-        <legend className="px-1 font-semibold">Midfield</legend>
+      <fieldset className="space-y-3 rounded-md border border-t-4 border-line border-t-warn bg-surface p-3 pt-2">
+        <legend className="float-left mb-1 w-full font-display text-xl font-semibold uppercase">Midfield</legend>
         <GoalInput title={layout.midfieldGoalLabel} value={value.midfieldGoal} colors={colors} onChange={(midfieldGoal) => onChange({ ...value, midfieldGoal })} />
         <div className="space-y-2">
           <div className="text-sm font-medium">Robots at least partly in the Midfield</div>
@@ -97,14 +97,14 @@ function ToggleInput({ value, onChange }: { value: ToggleState; onChange: (t: To
   const name = useId();
   return (
     <fieldset>
-      <legend className="mb-1 text-sm font-medium">Toggle</legend>
+      <legend className="eyebrow mb-1">Toggle</legend>
       <div className="grid grid-cols-3 gap-1">
         {(['red', 'yellow', 'blue'] as const).map((t) => (
           <label key={t}>
             <input type="radio" name={name} className="peer sr-only" checked={value === t} onChange={() => onChange(t)} />
             <span
               className={cn(
-                'flex min-h-10 cursor-pointer items-center justify-center rounded-lg border px-1 text-center text-xs font-semibold peer-focus-visible:outline-2 peer-focus-visible:outline-accent',
+                'flex min-h-10 cursor-pointer items-center justify-center rounded border px-1 text-center text-xs font-semibold peer-focus-visible:outline-2 peer-focus-visible:outline-accent',
                 value === t
                   ? t === 'red'
                     ? 'border-red-team bg-red-soft text-red-team ring-2 ring-red-team'

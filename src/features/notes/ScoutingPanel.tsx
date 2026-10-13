@@ -113,10 +113,10 @@ export function ScoutingPanel({ event, division }: { event: VexEvent; division: 
                 {open === r.team && (
                   <tr>
                     <td colSpan={7} className="pb-4">
-                      <div className="space-y-2 rounded-xl border border-line p-3">
+                      <div className="space-y-2 rounded-md border border-line p-3">
                         <div className="flex justify-between">
                           <span className="font-semibold">Scouting {r.team}</span>
-                          <Link to={`/teams/${encodeURIComponent(r.team)}`} className="text-sm text-accent underline">
+                          <Link to={`/teams/${encodeURIComponent(r.team)}`} className="text-sm text-accent-ink underline">
                             Team page
                           </Link>
                         </div>

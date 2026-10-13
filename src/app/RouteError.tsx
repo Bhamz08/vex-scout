@@ -11,7 +11,7 @@ export function RouteError() {
       <p className="text-sm text-muted">{offline ? 'Reconnect once to save it on this device.' : error instanceof Error ? error.message : 'Unexpected error.'}</p>
       <div className="flex justify-center gap-2">
         <Button onClick={() => window.location.reload()}>Reload</Button>
-        <Link to="/" className="inline-flex min-h-11 items-center rounded-lg px-4 text-accent underline">
+        <Link to="/" className="inline-flex min-h-11 items-center rounded px-4 text-accent-ink underline">
           Home
         </Link>
       </div>

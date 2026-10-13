@@ -72,7 +72,7 @@ function RatingField({ label, value, onChange }: { label: string; value: Rating;
             <input type="radio" name={name} value={r} checked={value === r} onChange={() => onChange(r)} className="peer sr-only" />
             <span
               className={cn(
-                'flex min-h-11 cursor-pointer items-center justify-center rounded-lg border text-sm font-semibold peer-focus-visible:outline-2 peer-focus-visible:outline-accent',
+                'flex min-h-11 cursor-pointer items-center justify-center rounded border text-sm font-semibold peer-focus-visible:outline-2 peer-focus-visible:outline-accent',
                 value === r ? 'border-accent bg-accent text-on-accent' : 'border-line',
               )}
             >

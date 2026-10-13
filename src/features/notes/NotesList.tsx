@@ -27,7 +27,7 @@ function NoteItem({ note, showTeam }: { note: NoteRecord; showTeam: boolean }) {
   const fromTeammate = note.deviceId !== deviceId;
 
   return (
-    <li className="space-y-2 rounded-xl border border-line bg-surface p-3">
+    <li className="space-y-2 rounded-md border border-line bg-surface p-3">
       {editing ? (
         <NoteEditor
           initialText={note.text}

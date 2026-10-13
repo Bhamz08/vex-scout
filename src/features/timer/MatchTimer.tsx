@@ -35,23 +35,23 @@ export function MatchTimer({ periods, compact = false, warnAtSeconds = [] }: { p
   return (
     <div className="space-y-4">
       <div className="text-center">
-        <div className="text-sm font-semibold tracking-wide text-muted uppercase">{statusText}</div>
+        <div className="eyebrow text-base">{statusText}</div>
         <div
-          className={cn('tabular font-bold', compact ? 'text-6xl' : 'text-8xl sm:text-9xl', remaining <= 10_000 && running && 'text-bad')}
+          className={cn('num leading-[0.85]', compact ? 'text-7xl' : 'text-[9rem] sm:text-[13rem]', remaining <= 10_000 && running && 'text-bad')}
           role="timer"
           aria-label={`${formatClock(remaining)} remaining in ${period?.label ?? 'match'}`}
         >
           {formatClock(remaining)}
         </div>
-        <div className="mx-auto mt-3 h-3 max-w-md overflow-hidden rounded-full border border-line bg-surface-2" aria-hidden="true">
-          <div className="h-full bg-accent transition-[width] duration-100" style={{ width: `${fraction * 100}%` }} />
+        <div className="mx-auto mt-4 h-1 max-w-md overflow-hidden bg-line" aria-hidden="true">
+          <div className="h-full bg-fg transition-[width] duration-100 dark:bg-accent" style={{ width: `${fraction * 100}%` }} />
         </div>
         {periods.length > 1 && (
-          <ol className="mt-3 flex justify-center gap-2 text-xs" aria-label="Periods">
+          <ol className="mt-4 flex justify-center gap-6" aria-label="Periods">
             {periods.map((p, i) => (
               <li
                 key={p.id}
-                className={cn('rounded-full border px-2 py-0.5', i === state.periodIndex ? 'border-accent font-semibold text-accent' : 'border-line text-muted')}
+                className={cn('eyebrow border-t-2 pt-1', i === state.periodIndex ? 'border-fg text-fg' : 'border-transparent')}
               >
                 {p.label} {formatClock(p.seconds * 1000)}
               </li>

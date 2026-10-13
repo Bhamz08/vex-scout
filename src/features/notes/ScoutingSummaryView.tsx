@@ -10,7 +10,7 @@ export function ScoutingSummaryView({ scouting, notes, compact = false }: { scou
   if (!s && !notes.length) return compact ? null : <p className="text-sm text-muted">No scouting yet.</p>;
 
   return (
-    <div className="space-y-1 rounded-lg bg-surface-2 p-2 text-sm">
+    <div className="space-y-1 rounded bg-surface-2 p-2 text-sm">
       {s && (
         <p className="tabular">
           <span className="font-semibold">Rating {formatNumber(s.rating)}/5</span>

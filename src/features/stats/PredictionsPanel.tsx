@@ -6,7 +6,7 @@ import { EmptyState, ErrorState, Loading } from '@/components/ui/States';
 import type { Division, Match, VexEvent } from '@/data/types';
 import { cn } from '@/lib/cn';
 import { formatDayTime, formatNumber, formatPercent } from '@/lib/format';
-import { matchWinner, sortMatches } from '@/lib/matches';
+import { matchWinner, shortMatchName, sortMatches } from '@/lib/matches';
 import type { Prediction } from '@/lib/stats/predict';
 import { useDivisionModel } from './useDivisionModel';
 import { WinProbability } from './WinProbability';
@@ -75,17 +75,17 @@ function PredictionList({ title, rows, event, division }: { title: string; rows:
   if (!rows.length) return null;
   return (
     <section className="space-y-2">
-      <h3 className="font-semibold">{title}</h3>
-      <ul className="space-y-2">
+      <h3 className="text-2xl font-semibold uppercase">{title}</h3>
+      <ul className="border-t border-line">
         {rows.map((row) => {
           const { match: m, prediction: p } = row;
           const hit = pickedCorrectly(row);
           return (
             <li key={m.id}>
-              <Link to={`/events/${event.id}/divisions/${division.id}/matches/${m.id}`} className="block space-y-2 rounded-xl border border-line bg-surface p-3 hover:border-accent">
+              <Link to={`/events/${event.id}/divisions/${division.id}/matches/${m.id}`} className="block space-y-2 border-b border-line px-1 py-4 transition-colors hover:bg-surface-2">
                 <div className="flex flex-wrap items-baseline justify-between gap-2 text-sm">
                   <span className="font-semibold">
-                    {m.name}
+                    {shortMatchName(m)}
                     {!m.scored && m.scheduled && <span className="ml-2 font-normal text-muted">{formatDayTime(m.scheduled)}</span>}
                   </span>
                   <span className="tabular">

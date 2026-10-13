@@ -1,27 +1,41 @@
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/barlow-condensed/500.css';
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/barlow-condensed/700.css';
 @import 'tailwindcss';
 
 /* Theme switching is attribute-driven (set in index.html + useApplyTheme), not media-query driven,
    so "light" / "dark" / "system" all work. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
-/* Design tokens. Every color pair below meets WCAG AA (4.5:1) for text in both themes. */
+/*
+ * Design tokens – "scoreboard" look: warm paper / graphite neutrals, one signal accent, and alliance
+ * red/blue reserved for alliances. Text pairs meet WCAG AA (4.5:1) in both themes (checked by script).
+ *   --accent      fill color (active states, marks, the logo)
+ *   --accent-ink  the accent when used as text or a thin line on the page background
+ *   --on-accent   text drawn on top of an --accent fill
+ */
 :root {
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --surface-2: #f1f5f9;
-  --fg: #0f172a;
-  --muted: #475569;
-  --line: #cbd5e1;
-  --red-team: #b91c1c;
-  --red-soft: #fee2e2;
-  --blue-team: #1d4ed8;
-  --blue-soft: #dbeafe;
-  --ok: #047857;
-  --warn: #92400e;
-  --warn-soft: #fef3c7;
-  --bad: #b91c1c;
-  --accent: #1d4ed8;
-  --on-accent: #ffffff;
+  --bg: #f4f3ee;
+  --surface: #fbfbf8;
+  --surface-2: #e9e8e1;
+  --fg: #141417;
+  --muted: #5a5a62;
+  --line: #d8d6cd;
+  --line-strong: #141417;
+  --red-team: #b8232b;
+  --red-soft: #f7e4e3;
+  --blue-team: #1c56c4;
+  --blue-soft: #e3ebf9;
+  --ok: #17663f;
+  --warn: #7a4f00;
+  --warn-soft: #f6ecd2;
+  --bad: #b8232b;
+  --accent: #f2c200;
+  --accent-ink: #6f5400;
+  --on-accent: #141417;
   /* Chart series (validated for CVD separation and 3:1 contrast on the surface) */
   --series-1: #2a78d6;
   --series-2: #eb6834;
@@ -29,45 +43,50 @@
 }
 
 [data-theme='dark'] {
-  --bg: #0b1020;
-  --surface: #131a2e;
-  --surface-2: #1b2440;
-  --fg: #e2e8f0;
-  --muted: #a3b1c6;
-  --line: #2a3553;
-  --red-team: #fca5a5;
-  --red-soft: #3b1518;
-  --blue-team: #93c5fd;
-  --blue-soft: #10224a;
-  --ok: #6ee7b7;
-  --warn: #fcd34d;
-  --warn-soft: #3a2a07;
-  --bad: #fca5a5;
-  --on-accent: #0b1020;
+  --bg: #0e0f11;
+  --surface: #15161a;
+  --surface-2: #1f2125;
+  --fg: #ecebe6;
+  --muted: #9d9ca3;
+  --line: #2b2d32;
+  --line-strong: #ecebe6;
+  --red-team: #f2696e;
+  --red-soft: #2a1517;
+  --blue-team: #78a6ff;
+  --blue-soft: #131c2e;
+  --ok: #5fd39a;
+  --warn: #f2c94c;
+  --warn-soft: #2b2410;
+  --bad: #f2696e;
+  --accent: #f2c200;
+  --accent-ink: #f2c200;
+  --on-accent: #141417;
   --series-1: #3987e5;
   --series-2: #d95926;
   color-scheme: dark;
 }
 
-[data-accent='blue'] { --accent: #1d4ed8; }
-[data-accent='violet'] { --accent: #6d28d9; }
-[data-accent='emerald'] { --accent: #047857; }
-[data-accent='amber'] { --accent: #b45309; }
-[data-accent='rose'] { --accent: #be123c; }
-[data-theme='dark'][data-accent='blue'] { --accent: #93c5fd; }
-[data-theme='dark'][data-accent='violet'] { --accent: #c4b5fd; }
-[data-theme='dark'][data-accent='emerald'] { --accent: #6ee7b7; }
-[data-theme='dark'][data-accent='amber'] { --accent: #fcd34d; }
-[data-theme='dark'][data-accent='rose'] { --accent: #fda4af; }
+[data-accent='blue'] { --accent: #1c56c4; --accent-ink: #1c56c4; --on-accent: #ffffff; }
+[data-accent='emerald'] { --accent: #17663f; --accent-ink: #17663f; --on-accent: #ffffff; }
+[data-accent='rose'] { --accent: #b3185a; --accent-ink: #b3185a; --on-accent: #ffffff; }
+[data-accent='violet'] { --accent: #5a3fc8; --accent-ink: #5a3fc8; --on-accent: #ffffff; }
+[data-theme='dark'][data-accent='blue'] { --accent: #78a6ff; --accent-ink: #78a6ff; --on-accent: #0e0f11; }
+[data-theme='dark'][data-accent='emerald'] { --accent: #5fd39a; --accent-ink: #5fd39a; --on-accent: #0e0f11; }
+[data-theme='dark'][data-accent='rose'] { --accent: #ff85b0; --accent-ink: #ff85b0; --on-accent: #0e0f11; }
+[data-theme='dark'][data-accent='violet'] { --accent: #b3a3ff; --accent-ink: #b3a3ff; --on-accent: #0e0f11; }
 
 @theme inline {
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', 'Arial Narrow', ui-sans-serif, sans-serif;
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
   --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
   --color-on-accent: var(--on-accent);
   --color-red-team: var(--red-team);
   --color-red-soft: var(--red-soft);
@@ -88,13 +107,65 @@ body {
 }
 
 body {
-  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
 
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--fg);
   outline-offset: 2px;
+}
+
+/* Data tables: hairline rows, small uppercase headers, tabular figures. */
+table {
+  font-variant-numeric: tabular-nums;
+}
+thead th {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line-strong);
+}
+tbody tr:hover {
+  background: var(--surface-2);
+}
+
+@layer components {
+  /* Small uppercase label above a section or value. */
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  /* Scoreboard numerals. */
+  .num {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.01em;
+  }
 }
 
 /* Minimalist mode hides secondary detail marked with .detail */

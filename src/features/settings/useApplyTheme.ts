@@ -13,7 +13,7 @@ export function useApplyTheme(): void {
     const apply = () => {
       const dark = theme === 'dark' || (theme === 'system' && media.matches);
       root.dataset.theme = dark ? 'dark' : 'light';
-      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0b1020' : '#1d4ed8');
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#141417'); // header is graphite in both themes
     };
     apply();
     media.addEventListener('change', apply);

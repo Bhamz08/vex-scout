@@ -8,7 +8,7 @@ export function AwardsList({ awards, events, showTeams = false }: { awards: Awar
   return (
     <ul className="space-y-2">
       {awards.map((a) => (
-        <li key={a.id} className="rounded-xl border border-line bg-surface p-3">
+        <li key={a.id} className="rounded-md border border-line bg-surface p-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-semibold">{a.title}</span>
             {a.qualifications.map((q) => (
@@ -21,7 +21,7 @@ export function AwardsList({ awards, events, showTeams = false }: { awards: Awar
           {showTeams && (
             <div className="mt-1 flex flex-wrap gap-2 text-sm">
               {a.teams.map((t) => (
-                <Link key={t.id} to={`/teams/${encodeURIComponent(t.number)}`} className="text-accent underline">
+                <Link key={t.id} to={`/teams/${encodeURIComponent(t.number)}`} className="text-accent-ink underline">
                   {t.number}
                 </Link>
               ))}

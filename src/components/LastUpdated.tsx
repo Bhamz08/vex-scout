@@ -33,7 +33,7 @@ export function LastUpdated({
         type="button"
         onClick={onRefresh}
         disabled={isFetching}
-        className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-line px-2 hover:bg-surface-2 disabled:opacity-60"
+        className="inline-flex min-h-9 items-center gap-1 rounded border border-line px-2 hover:bg-surface-2 disabled:opacity-60"
       >
         <RefreshIcon width={16} height={16} className={cn(isFetching && 'animate-spin')} />
         {isFetching ? 'Refreshing…' : 'Refresh'}

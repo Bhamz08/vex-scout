@@ -43,10 +43,10 @@ export function TeamSearchPage() {
         {favorites.length === 0 ? (
           <EmptyState title="No favorite teams yet">Open a team and tap Favorite to pin it here.</EmptyState>
         ) : (
-          <ul className="grid gap-2 sm:grid-cols-2">
+          <ul className="grid border-t border-line sm:grid-cols-2 sm:gap-x-8">
             {favorites.map((f) => (
               <li key={f.id}>
-                <Link to={`/teams/${encodeURIComponent(f.refId)}`} className="block rounded-xl border border-line bg-surface p-3 hover:border-accent">
+                <Link to={`/teams/${encodeURIComponent(f.refId)}`} className="block border-b border-line px-1 py-3 transition-colors hover:bg-surface-2">
                   <span className="font-semibold">{f.label}</span>
                   <span className="block text-sm text-muted">{f.subtitle}</span>
                 </Link>

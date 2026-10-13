@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Offline-first scouting, stats and tools for VEX V5RC and VEX U." />
-    <meta name="theme-color" content="#1d4ed8" />
+    <meta name="theme-color" content="#141417" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <title>VEX Scout</title>
@@ -15,7 +15,7 @@
         var t = s.theme || 'system';
         var dark = t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-        document.documentElement.dataset.accent = s.accent || 'blue';
+        document.documentElement.dataset.accent = s.accent || 'signal';
       } catch (e) {}
     </script>
   </head>

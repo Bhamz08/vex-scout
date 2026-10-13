@@ -19,7 +19,7 @@ export function UpdatePrompt() {
   return (
     <div
       role="status"
-      className="fixed inset-x-4 bottom-20 z-40 mx-auto flex max-w-md items-center gap-3 rounded-xl border border-line bg-surface p-3 shadow-lg md:bottom-6"
+      className="fixed inset-x-4 bottom-20 z-40 mx-auto flex max-w-md items-center gap-3 rounded-md border border-line bg-surface p-3 shadow-lg md:bottom-6"
     >
       <p className="flex-1 text-sm">{needRefresh ? 'A new version is available.' : 'Ready to work offline.'}</p>
       {needRefresh && (

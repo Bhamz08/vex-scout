@@ -36,7 +36,10 @@ export function formatRelative(epochMs: number, now = Date.now()): string {
 }
 
 export function formatNumber(n: number, digits = 1): string {
-  return Number.isFinite(n) ? n.toFixed(digits) : '–';
+  if (!Number.isFinite(n)) return '–';
+  const text = n.toFixed(digits);
+  // Avoid "-0.0" for tiny negatives.
+  return Number(text) === 0 ? (0).toFixed(digits) : text;
 }
 
 export function formatPercent(p: number): string {
