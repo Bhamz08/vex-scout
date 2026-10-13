@@ -78,7 +78,7 @@ Copy `.env.example` to `.env` for local use. On Vercel, set them in **Project �
 
 1. Push this repo to GitHub and import it in Vercel (framework preset **Vite**; `vercel.json` already sets the build command and output directory).
 2. Add `VEX_API_KEY` as an environment variable (Production, Preview and Development).
-3. Deploy. Static files are served from `dist/`, `api/vex/[...path].ts` and `api/world-skills.ts` become serverless functions, and all other paths rewrite to the SPA.
+3. Deploy. Static files are served from `dist/`, `api/vex.ts` and `api/world-skills.ts` become serverless functions. `vercel.json` rewrites `/api/vex/<path>` to `api/vex.ts` (as `?__path=<path>`), because Vercel doesn't reliably route multi-segment catch-all files for non-Next.js functions. All other paths rewrite to the SPA.
 4. Open the site on your phone and use **Add to Home Screen** / **Install app**.
 
 Locally, `npm run dev` also serves `/api/*`: a dev-only Vite plugin (`scripts/devApiPlugin.ts`) runs the same function files and reads `VEX_API_KEY` from `.env` on the server side. So with a `.env` in place, `npm run dev` gives you live data. `npx vercel dev` works too.
@@ -87,7 +87,7 @@ Locally, `npm run dev` also serves `/api/*`: a dev-only Vite plugin (`scripts/de
 
 ```
 api/                        Vercel serverless functions (server-only; holds the API key)
-  vex/[...path].ts          GET proxy → VEX Events API, adds auth, 60 s cache, path sanitising
+  vex.ts                    GET proxy → VEX Events API, adds auth, 60 s cache, path sanitising
   world-skills.ts           World Skills standings proxy (not part of the documented API)
   _lib/proxy.ts             shared, unit-tested proxy logic
 src/

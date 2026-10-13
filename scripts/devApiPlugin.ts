@@ -4,7 +4,7 @@ import { loadEnv, type Plugin } from 'vite';
 type Handler = (request: Request) => Promise<Response>;
 
 /**
- * Dev-only: serves /api/* from the same function files Vercel deploys (api/vex/[...path].ts,
+ * Dev-only: serves /api/* from the same function files Vercel deploys (api/vex.ts,
  * api/world-skills.ts), so `npm run dev` can use live data without `vercel dev`.
  * Server-only env vars (VEX_API_KEY, …) are loaded into this Node process and never sent to the client;
  * Vite only exposes VITE_-prefixed variables to the browser bundle.
@@ -21,7 +21,7 @@ export function devApiPlugin(): Plugin {
 
       server.middlewares.use(async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
         const url = req.url ?? '';
-        const file = url.startsWith('/api/vex/') ? '/api/vex/[...path].ts' : url.startsWith('/api/world-skills') ? '/api/world-skills.ts' : null;
+        const file = url.startsWith('/api/vex/') ? '/api/vex.ts' : url.startsWith('/api/world-skills') ? '/api/world-skills.ts' : null;
         if (!file) return next();
         try {
           const mod = (await server.ssrLoadModule(file)) as { GET: Handler };

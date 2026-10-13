@@ -2,7 +2,7 @@
  * VEX Events API v2 endpoint contract.
  *
  * ✔ VERIFIED against the official OpenAPI spec ("Public VEX Events API", swagger v1.0.21):
- *   - base URL https://events.vex.com/api/v2, HTTP Bearer auth (added server-side by api/vex/[...path].ts)
+ *   - base URL https://events.vex.com/api/v2, HTTP Bearer auth (added server-side by api/vex.ts)
  *   - pagination via `page` / `per_page` (default 25, max 250); responses are { meta: PageMeta, data: [...] }
  *   - every path and query parameter below, array params as `name[]` (form style, exploded)
  *   - match round codes (1 practice, 2 qualification, 3 QF, 4 SF, 5 F, 6 R16)
@@ -17,7 +17,7 @@
  */
 import type { EventLevel, Grade, ProgramCode } from '../types';
 
-/** Our serverless proxy (api/vex/[...path].ts). */
+/** Our serverless proxy (api/vex.ts). */
 export const PROXY_BASE = '/api/vex';
 /** Separate proxy for the public World Skills standings (api/world-skills.ts). */
 export const WORLD_SKILLS_PROXY = '/api/world-skills';

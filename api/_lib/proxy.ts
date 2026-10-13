@@ -10,10 +10,24 @@ export const DEFAULT_API_BASE = 'https://events.vex.com/api/v2';
 /** Only plain path segments may be forwarded: no "..", no encoded tricks, no absolute URLs. */
 const SAFE_PATH = /^[A-Za-z0-9_\-/]+$/;
 
+/**
+ * Query parameter carrying the API path. vercel.json rewrites /api/vex/<path> to /api/vex?__path=<path>,
+ * because Vercel's filesystem routing for plain (non-Next.js) functions doesn't reliably match
+ * multi-segment catch-all routes. Requests that hit the function directly (local dev) use the pathname.
+ */
+export const PATH_PARAM = '__path';
+
 export function buildUpstreamUrl(requestUrl: string, prefix: string, base: string): URL | null {
   const url = new URL(requestUrl);
-  if (!url.pathname.startsWith(prefix)) return null;
-  const rest = url.pathname.slice(prefix.length).replace(/^\/+/, '');
+  let rest: string;
+  if (url.searchParams.has(PATH_PARAM)) {
+    rest = url.searchParams.get(PATH_PARAM) ?? '';
+    url.searchParams.delete(PATH_PARAM);
+  } else {
+    if (!url.pathname.startsWith(prefix)) return null;
+    rest = url.pathname.slice(prefix.length);
+  }
+  rest = rest.replace(/^\/+/, '');
   if (!rest || rest.includes('..') || rest.includes('//') || !SAFE_PATH.test(rest)) return null;
   const upstream = new URL(`${base.replace(/\/+$/, '')}/${rest}`);
   url.searchParams.forEach((value, key) => upstream.searchParams.append(key, value));

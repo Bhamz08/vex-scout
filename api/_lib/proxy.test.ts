@@ -10,7 +10,16 @@ describe('buildUpstreamUrl', () => {
     expect(url?.toString()).toBe(`${BASE}/events/1/teams?season%5B%5D=1&season%5B%5D=2`);
   });
 
-  it.each(['/api/vex/', '/api/vex/../secrets', '/api/vex/a//b', '/api/vex/a%2F..%2Fb', '/other/teams'])('rejects %s', (path) => {
+  it('takes the path from the __path parameter added by the vercel.json rewrite', () => {
+    const url = buildUpstreamUrl('https://app.test/api/vex?__path=teams/7/events&season%5B%5D=204', '/api/vex/', BASE);
+    expect(url?.toString()).toBe(`${BASE}/teams/7/events?season%5B%5D=204`);
+  });
+
+  it.each(['?__path=../secrets', '?__path=', '?__path=https://evil.test/x'])('rejects unsafe __path %s', (q) => {
+    expect(buildUpstreamUrl(`https://app.test/api/vex${q}`, '/api/vex/', BASE)).toBeNull();
+  });
+
+  it.each(['/api/vex/','/api/vex/../secrets', '/api/vex/a//b', '/api/vex/a%2F..%2Fb', '/other/teams'])('rejects %s', (path) => {
     expect(buildUpstreamUrl(`https://app.test${path}`, '/api/vex/', BASE)).toBeNull();
   });
 });

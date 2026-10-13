@@ -1,7 +1,8 @@
-import { DEFAULT_API_BASE, handleProxy, TtlCache } from '../_lib/proxy.js';
+import { DEFAULT_API_BASE, handleProxy, TtlCache } from './_lib/proxy.js';
 
 /**
  * GET /api/vex/<path>?<query> → VEX Events API v2 /<path>?<query>, with the API key added server-side.
+ * On Vercel, vercel.json rewrites /api/vex/<path> to this function as /api/vex?__path=<path>.
  * Env: VEX_API_KEY (required), VEX_API_BASE (optional).
  */
 const cache = new TtlCache(300);
