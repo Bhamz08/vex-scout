@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildUpstreamUrl, handleProxy, TtlCache } from './proxy';
+import { buildUpstreamUrl, handleProxy, TtlCache } from './proxy.js';
 
 const BASE = 'https://events.example.com/api/v2';
 const opts = { apiKey: 'secret', baseUrl: BASE, prefix: '/api/vex/', ttlMs: 60_000 };

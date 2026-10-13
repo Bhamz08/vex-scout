@@ -1,4 +1,4 @@
-import { TtlCache } from './_lib/proxy';
+import { TtlCache } from './_lib/proxy.js';
 
 /**
  * GET /api/world-skills?season=<id>&grade=<High School|Middle School|College>

@@ -1,4 +1,4 @@
-import { DEFAULT_API_BASE, handleProxy, TtlCache } from '../_lib/proxy';
+import { DEFAULT_API_BASE, handleProxy, TtlCache } from '../_lib/proxy.js';
 
 /**
  * GET /api/vex/<path>?<query> → VEX Events API v2 /<path>?<query>, with the API key added server-side.
