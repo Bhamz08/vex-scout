@@ -1,13 +1,11 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
-import { Card, Section } from '@/components/ui/Card';
+import { Section } from '@/components/ui/Card';
 import { TextField } from '@/components/ui/Fields';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/ui/States';
-import { DEMO_EVENT_ID, DEMO_VEXU_EVENT_ID } from '@/data/demo/generator';
 import { useActiveSeason } from '@/data/queries';
-import { useDataSource } from '@/data/useDataSource';
 import { useFavorites } from '@/features/favorites/favorites';
 import { PROGRAM_MODES, useSettings } from '@/features/settings/store';
 
@@ -23,7 +21,6 @@ export function HomePage() {
   const [team, setTeam] = useState('');
   const programMode = useSettings((s) => s.program);
   const { program, season } = useActiveSeason();
-  const { kind } = useDataSource();
   const favTeams = useFavorites('team');
   const favEvents = useFavorites('event');
 
@@ -50,19 +47,6 @@ export function HomePage() {
           Go
         </Button>
       </form>
-
-      {kind === 'demo' && (
-        <Card className="mb-6 border-warn bg-warn-soft">
-          <p className="font-semibold text-warn">You're viewing demo data</p>
-          <p className="mt-1 text-sm">
-            Everything works with generated teams and matches. Start with the{' '}
-            <Link to={`/events/${program === 'VURC' ? DEMO_VEXU_EVENT_ID : DEMO_EVENT_ID}`} className="font-semibold underline">
-              demo signature event
-            </Link>
-            .
-          </p>
-        </Card>
-      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         <Section title="Favorite teams">

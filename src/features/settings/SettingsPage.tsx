@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { cn } from '@/lib/cn';
 import { ProgramPicker } from './ProgramPicker';
 import { SeasonPicker } from './SeasonPicker';
-import { ACCENTS, LIVE_API_AVAILABLE, useSettings, type Accent, type ThemePref } from './store';
+import { ACCENTS, useSettings, type Accent, type ThemePref } from './store';
 
 const THEMES: { id: ThemePref; label: string }[] = [
   { id: 'system', label: 'System' },
@@ -23,38 +23,6 @@ export function SettingsPage() {
           <h2 className="font-semibold">Competition</h2>
           <ProgramPicker />
           <SeasonPicker />
-        </Card>
-
-        <Card className="space-y-4">
-          <h2 className="font-semibold">Data source</h2>
-          <fieldset className="space-y-2">
-            <legend className="sr-only">Data source</legend>
-            <label className="flex items-center gap-3">
-              <input type="radio" name="datamode" checked={s.dataMode === 'demo'} onChange={() => s.set('dataMode', 'demo')} className="size-5 accent-[var(--accent)]" />
-              <span>
-                <span className="font-medium">Demo data</span>
-                <span className="block text-sm text-muted">Generated teams, an event and matches. Works with no API key.</span>
-              </span>
-            </label>
-            <label className={cn('flex items-center gap-3', !LIVE_API_AVAILABLE && 'opacity-60')}>
-              <input
-                type="radio"
-                name="datamode"
-                disabled={!LIVE_API_AVAILABLE}
-                checked={s.dataMode === 'live'}
-                onChange={() => s.set('dataMode', 'live')}
-                className="size-5 accent-[var(--accent)]"
-              />
-              <span>
-                <span className="font-medium">Live (VEX Events API)</span>
-                <span className="block text-sm text-muted">
-                  {LIVE_API_AVAILABLE
-                    ? 'Uses the API through this site’s server proxy.'
-                    : 'Not configured on this deployment. See the README to add an API key.'}
-                </span>
-              </span>
-            </label>
-          </fieldset>
         </Card>
 
         <Card className="space-y-4">

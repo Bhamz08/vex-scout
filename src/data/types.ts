@@ -1,6 +1,6 @@
 /**
  * App domain model. These types are deliberately independent of the VEX Events API wire format:
- * LiveDataSource maps API responses into them and DemoDataSource generates them directly.
+ * LiveDataSource maps API responses into them.
  */
 
 export type ProgramCode = 'V5RC' | 'VURC';

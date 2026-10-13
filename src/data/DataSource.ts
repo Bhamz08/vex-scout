@@ -13,15 +13,12 @@ import type {
 } from './types';
 
 /**
- * Everything the UI needs from a data provider. Two implementations:
- *  - DemoDataSource: deterministic generated data, no network.
- *  - LiveDataSource: VEX Events API v2 through our serverless proxy.
+ * Everything the UI needs from a data provider. The app uses LiveDataSource (VEX Events API v2 through
+ * our serverless proxy); the interface keeps screens independent of the API and easy to mock.
  *
  * Methods return domain types (see types.ts), never raw API payloads.
  */
 export interface DataSource {
-  readonly kind: 'demo' | 'live';
-
   getSeasons(program: ProgramCode): Promise<Season[]>;
 
   /** Exact lookup by team number, e.g. "1234A". Returns null if no such team. */
@@ -45,7 +42,7 @@ export interface DataSource {
 
   /**
    * Matches to compute season-wide ratings (TrueSkill) from. There is no API endpoint for "every match
-   * in a season", so the live source returns the matches cached on this device; the demo returns all.
+   * in a season", so this returns the matches cached on this device.
    */
   getRatingMatches(seasonId: number): Promise<Match[]>;
 }

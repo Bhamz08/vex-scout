@@ -9,7 +9,6 @@ import { AwardSchema, EventSchema, ProgramSchema, MatchSchema, RankingSchema, Se
 
 /** VEX Events API v2 via our proxy. See endpoints.ts for the wire contract. */
 export class LiveDataSource implements DataSource {
-  readonly kind = 'live' as const;
   private programIds: Promise<Record<ProgramCode, number>> | null = null;
 
   /** Program ids aren't fixed by the spec, so look them up once by abbreviation ("V5RC", "VURC"). */

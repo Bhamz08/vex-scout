@@ -1,7 +1,7 @@
 import { Link, NavLink, Outlet, ScrollRestoration } from 'react-router-dom';
 import { EventIcon, HomeIcon, MoreIcon, ScoreIcon, SettingsIcon, TeamIcon } from '@/components/icons';
 import { cn } from '@/lib/cn';
-import { DataModeBadge } from './DataModeBadge';
+import { ProgramBadge } from './ProgramBadge';
 import { OfflineBanner } from './OfflineBanner';
 import { UpdatePrompt } from './UpdatePrompt';
 
@@ -25,7 +25,7 @@ export function Layout() {
             <img src="/favicon.svg" alt="" className="size-7" />
             <span>VEX Scout</span>
           </Link>
-          <DataModeBadge />
+          <ProgramBadge />
           <nav aria-label="Primary" className="ml-auto hidden gap-1 md:flex">
             {NAV.map(({ to, label, end }) => (
               <NavLink

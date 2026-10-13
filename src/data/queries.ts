@@ -7,16 +7,15 @@ import type { EventFilter, Grade, Match, ProgramCode, Season } from './types';
 import { useDataSource } from './useDataSource';
 
 /**
- * React Query wrapper around the active DataSource. Live data goes through the IndexedDB cache
- * (network-first, offline fallback); demo data is generated in memory and needs no cache.
- * Every result carries `fetchedAt` for "last updated" labels.
+ * React Query wrapper around the DataSource. Every request goes through the IndexedDB cache
+ * (network-first, offline fallback), and every result carries `fetchedAt` for "last updated" labels.
  */
 export function dataQueryOptions<T>(ds: DataSource, key: readonly unknown[], fn: (ds: DataSource) => Promise<T>, enabled = true) {
   return {
-    queryKey: [ds.kind, ...key],
+    queryKey: [...key],
     enabled,
     queryFn: async (): Promise<Cached<T>> =>
-      ds.kind === 'demo' ? { data: await fn(ds), fetchedAt: Date.now(), fromCache: false } : cachedFetch(JSON.stringify(key), () => fn(ds)),
+      cachedFetch(JSON.stringify(key), () => fn(ds)),
   };
 }
 

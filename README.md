@@ -32,16 +32,17 @@ _Coming soon._ <!-- Add screenshots of: home, event matches, pre-match page, sco
 |------|-------|-----------|------------|-------|
 | _tbd_ | _tbd_ | _tbd_ | _tbd_ | _tbd_ |
 
-## Quick start (demo mode, no API key)
+## Quick start
 
-Requires Node.js 20+.
+Requires Node.js 20+ and a VEX Events API key (see below).
 
 ```bash
 npm install
+cp .env.example .env   # then paste your key into VEX_API_KEY
 npm run dev
 ```
 
-Open http://localhost:5173. With no API key, the app runs in **demo mode** and shows a "Demo data" badge. Demo data is generated deterministically: 40 V5RC teams, a two-division signature event part-way through qualifications, several completed events (rankings, skills runs, awards), upcoming events in other countries, and a VEX U event. Every screen works offline.
+Open http://localhost:5173. Anything you have opened once keeps working offline.
 
 Other scripts:
 
@@ -72,12 +73,11 @@ Copy `.env.example` to `.env` for local use. On Vercel, set them in **Project �
 | `VEX_API_KEY` | server (Vercel function) | for live data | VEX Events API token. Never prefix with `VITE_`. |
 | `VEX_API_BASE` | server | no | Defaults to `https://events.vex.com/api/v2` |
 | `VEX_WORLD_SKILLS_URL` | server | no | Override the World Skills feed URL template (`{season}`, `{grade}`) |
-| `VITE_LIVE_API` | client (build time) | no | Set to `true` once the proxy has a key; enables "Live" in Settings |
 
 ## Deploying (Vercel)
 
 1. Push this repo to GitHub and import it in Vercel (framework preset **Vite**; `vercel.json` already sets the build command and output directory).
-2. Add `VEX_API_KEY` and `VITE_LIVE_API=true` as environment variables.
+2. Add `VEX_API_KEY` as an environment variable (Production, Preview and Development).
 3. Deploy. Static files are served from `dist/`, `api/vex/[...path].ts` and `api/world-skills.ts` become serverless functions, and all other paths rewrite to the SPA.
 4. Open the site on your phone and use **Add to Home Screen** / **Install app**.
 
@@ -96,7 +96,6 @@ src/
   data/
     DataSource.ts           the interface every screen uses
     types.ts                domain model, independent of the API wire format
-    demo/                   DemoDataSource + seeded generator
     live/                   LiveDataSource, zod schemas, mappers, endpoint contract
     db.ts                   Dexie (IndexedDB) schema
     cache.ts                network-first fetch with IndexedDB fallback
@@ -107,7 +106,7 @@ src/
   sync/SyncAdapter.ts       stub for future cloud sync (not implemented)
 ```
 
-**Data flow.** Screens call React Query hooks → the active `DataSource` (demo or live). Live responses are validated with zod, mapped to domain types, and stored in IndexedDB, so previously viewed events and teams work offline. Each view shows when its data was fetched and has a Refresh button. The Workbox service worker precaches the app shell and also keeps a network-first runtime cache of `/api/*` responses.
+**Data flow.** Screens call React Query hooks → the `DataSource` (`LiveDataSource`). Responses are validated with zod, mapped to domain types, and stored in IndexedDB, so previously viewed events and teams work offline. Each view shows when its data was fetched and has a Refresh button. The Workbox service worker precaches the app shell and also keeps a network-first runtime cache of `/api/*` responses.
 
 **State.** Server data lives in React Query and IndexedDB. Settings live in a small persisted Zustand store. Notes, scouting forms, favorites and skills runs live in Dexie tables.
 
@@ -151,7 +150,6 @@ Vitest covers:
 - all three score calculators, including the manual's own Figure SC5 example
 - the timer state machine
 - CSV export (quoting and formula-injection safety), the scouting sheet, and the JSON bundle merge
-- the demo data source
 - the API proxy and the live API mappers, using spec-shaped payloads
 
 CI runs typecheck, lint, tests and build on every push ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)).

@@ -9,7 +9,6 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/ui/States';
 import { useActiveSeason, useRatingMatches } from '@/data/queries';
 import type { Match } from '@/data/types';
-import { useDataSource } from '@/data/useDataSource';
 import { SeasonPicker } from '@/features/settings/SeasonPicker';
 import { formatNumber } from '@/lib/format';
 import { computeTrueSkill } from '@/lib/stats/trueskill';
@@ -17,7 +16,6 @@ import { computeTrueSkill } from '@/lib/stats/trueskill';
 export function TrueSkillPage() {
   const { seasonId } = useActiveSeason();
   const matchesQ = useRatingMatches(seasonId);
-  const { kind } = useDataSource();
 
   return (
     <>
@@ -35,9 +33,7 @@ export function TrueSkillPage() {
           teams’), processing matches once in time order. Teams are ranked by μ − 3σ, a conservative estimate that rewards both strength and consistency.
         </p>
         <p className="text-muted">
-          {kind === 'live'
-            ? 'In Live mode the API has no “all matches this season” call, so ratings use the match lists cached on this device (events and teams you have opened).'
-            : 'In demo mode every demo match this season is used.'}
+          The API has no “all matches this season” call, so ratings use the match lists cached on this device (events and teams you have opened).
         </p>
       </Card>
       <div className="mb-4 max-w-sm">

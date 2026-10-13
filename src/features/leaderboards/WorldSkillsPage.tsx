@@ -7,7 +7,6 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/ui/States';
 import { useActiveSeason, useWorldSkills } from '@/data/queries';
 import type { Grade, WorldSkillsEntry } from '@/data/types';
-import { useDataSource } from '@/data/useDataSource';
 import { SeasonPicker } from '@/features/settings/SeasonPicker';
 import { placeLine } from '@/lib/format';
 
@@ -18,13 +17,12 @@ export function WorldSkillsPage() {
   const [grade, setGrade] = useState<Grade>(active.grade);
   const effectiveGrade = active.program === 'VURC' ? 'College' : grade === 'College' ? 'High School' : grade;
   const skillsQ = useWorldSkills(active.seasonId, effectiveGrade);
-  const { kind } = useDataSource();
 
   return (
     <>
       <PageHeader
         title="World Skills leaderboard"
-        subtitle={kind === 'live' ? 'Best combined score from a single event, per the global ranking rule.' : 'Demo data: built from the demo events.'}
+        subtitle="Best combined score from a single event, per the global ranking rule."
         actions={<LastUpdated result={skillsQ.data} onRefresh={() => void skillsQ.refetch()} isFetching={skillsQ.isFetching} />}
       />
       <div className="mb-4 grid gap-3 sm:grid-cols-2">
