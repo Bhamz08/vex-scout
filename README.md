@@ -1,5 +1,10 @@
 # VEX Scout
 
+[![CI](https://github.com/Bhamz08/vex-scout/actions/workflows/ci.yml/badge.svg)](https://github.com/Bhamz08/vex-scout/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+**[Open the app â†’](https://vex-scout-opal.vercel.app)**
+
 An offline-first scouting app for **VEX V5 Robotics Competition (V5RC)** and **VEX U**, built as an installable Progressive Web App. It combines the team/event data and statistics you'd find in tools like VRC RoboScout with the match tools of V5RC Hub, and is designed for phones at events with bad Wi-Fi.
 
 > Not affiliated with VEX Robotics or the REC Foundation. Game rules belong to their owners; this app links to the official Game Manual instead of copying it.
@@ -26,11 +31,9 @@ An offline-first scouting app for **VEX V5 Robotics Competition (V5RC)** and **V
 
 ## Screenshots
 
-_Coming soon._ <!-- Add screenshots of: home, event matches, pre-match page, score calculator, timer (light + dark). -->
-
-| Home | Event | Pre-match | Calculator | Timer |
-|------|-------|-----------|------------|-------|
-| _tbd_ | _tbd_ | _tbd_ | _tbd_ | _tbd_ |
+| Home | Score calculator | Practice timer |
+|------|------------------|----------------|
+| ![Home screen](docs/screenshots/home.png) | ![Score calculator](docs/screenshots/scoring.png) | ![Practice timer](docs/screenshots/timer.png) |
 
 ## Quick start
 
@@ -76,7 +79,7 @@ Copy `.env.example` to `.env` for local use. On Vercel, set them in **Project â†
 
 ## Deploying (Vercel)
 
-1. Push this repo to GitHub and import it in Vercel (framework preset **Vite**; `vercel.json` already sets the build command and output directory).
+1. Fork this repo and import it in Vercel (framework preset **Vite**; `vercel.json` already sets the build command and output directory).
 2. Add `VEX_API_KEY` as an environment variable (Production, Preview and Development).
 3. Deploy. Static files are served from `dist/`, `api/vex.ts` and `api/world-skills.ts` become serverless functions. `vercel.json` rewrites `/api/vex/<path>` to `api/vex.ts` (as `?__path=<path>`), because Vercel doesn't reliably route multi-segment catch-all files for non-Next.js functions. All other paths rewrite to the SPA.
 4. Open the site on your phone and use **Add to Home Screen** / **Install app**.
@@ -169,4 +172,8 @@ A "scoreboard" look: Barlow Condensed for headings and numbers, IBM Plex Sans fo
 - **Cloud sync** of notes between teammates (the data model is already sync-ready; implement `SyncAdapter`)
 - **Notifications** when a favorite team's match is coming up
 - **Home-screen widgets** (next match, live rank) where platforms allow
-- Screenshots and a Lighthouse report in this README
+- A Lighthouse report in this README
+
+## License
+
+MIT, see [LICENSE](LICENSE).
